@@ -1,5 +1,5 @@
 <div class="col-md-7">
-    <img src="../images/imagem-900x600.jpg" class="img-fluid" alt="images/imagem-900x600.jpg" width="100%">
+    <img src="<?php __DIR__ ?>/assets/images/imagem-900x600.jpg" class="img-fluid" alt="images/imagem-900x600.jpg" width="100%">
 </div>
 <div class="col-md-5 ps-5">
     <h2 class="mb-0"><?= htmlspecialchars($kit['nome']); ?></h2>
@@ -38,7 +38,7 @@
             <li class="mb-4">
                 <div class="d-flex align-items-start">
                     <!-- Imagem do produto -->
-                    <img src="../images/imagem-600x400.jpg" alt="<?php echo htmlspecialchars($produto['nome'], ENT_QUOTES); ?>" class="me-3" style="width: 120px; height: auto;">
+                    <img src="<?php __DIR__ ?>/assets/images/imagem-600x400.jpg" alt="<?php echo htmlspecialchars($produto['nome'], ENT_QUOTES); ?>" class="me-3" style="width: 120px; height: auto;">
                     
                     <!-- Informações do produto -->
                     <div>

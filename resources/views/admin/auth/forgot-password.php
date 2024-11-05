@@ -1,6 +1,8 @@
-<?php
-ob_start(); // Inicia o buffer de saída
-?>
+<?php startSection('title'); ?>
+Teste
+<?php endSection(); ?>
+
+<?php startSection('content'); ?>
 
 <?php if (isset($_SESSION['flash_message'])): ?>
     <div class="alert alert-success">
@@ -25,8 +27,6 @@ ob_start(); // Inicia o buffer de saída
         <a href="/login">Voltar ao Login</a>
     </div>
 </form>
+<?php endSection(); ?>
 
-<?php
-$content = ob_get_clean(); // Obtém o conteúdo do buffer e limpa o buffer
-$title = 'Recuperar Senha';
-require __DIR__ . '/../layouts/auth.php'; // Inclui o layout mestre
+<?php extend('layouts/auth'); ?>

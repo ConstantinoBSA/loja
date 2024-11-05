@@ -1,13 +1,8 @@
-<?php
-ob_start(); // Inicia o buffer de saída
+<?php startSection('title'); ?>
+Teste
+<?php endSection(); ?>
 
-if (isset($_GET['email'])) {
-    $email = $_GET['email'];
-} else {
-    header("Location: /login");
-    exit();
-}
-?>
+<?php startSection('content'); ?>
 
 <?php if (isset($_SESSION['success_message'])): ?>
         <p style="color: green;"><?php echo $_SESSION['success_message'];
@@ -28,8 +23,6 @@ if (isset($_GET['email'])) {
         <a href="/login">Voltar ao Login</a>
     </div>
 </form>
+<?php endSection(); ?>
 
-<?php
-$content = ob_get_clean(); // Obtém o conteúdo do buffer e limpa o buffer
-$title = 'Recuperar Senha';
-require __DIR__ . '/../layouts/auth.php'; // Inclui o layout mestre
+<?php extend('layouts/auth'); ?>

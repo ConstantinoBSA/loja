@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>asd</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="./assets/css/admin.css">
+    <link rel="stylesheet" href="<?php __DIR__ ?>/assets/css/style.css">
+    <link rel="stylesheet" href="<?php __DIR__ ?>/assets/css/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
     <!-- Toastr CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
@@ -13,7 +14,7 @@
 <body>
     <header class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/"><img src="./assets/images/logo.jpg" alt="LOGO" width="30" class="me-2">asd</a>
+            <a class="navbar-brand" href="/"><img src="<?php __DIR__ ?>/assets/images/logo.jpg" alt="LOGO" width="30" class="me-2">asd</a>
             <form class="d-flex ms-auto">
                 <div class="input-group me-2">
                     <input type="search" class="form-control" placeholder="Procurar" style="width: 450px;">
@@ -29,7 +30,7 @@
                     <li><a class="dropdown-item" href="/admin/configuracoes">Configurações</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li>
-                        <a class="dropdown-item" href="admin/logout">Sair</a>
+                        <a class="dropdown-item" href="/admin/logout">Sair</a>
                     </li>
                 </ul>
             </div>
@@ -72,7 +73,8 @@
     <!-- Toastr JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="/js/admin.js"></script>
+    <script src="<?php __DIR__ ?>/assets/js/script.js"></script>
+    <script src="<?php __DIR__ ?>/assets/js/admin.js"></script>
     <script>
         $(document).ready(function() {
             <?php if (isset($_SESSION['message']) && isset($_SESSION['message_type'])): ?>

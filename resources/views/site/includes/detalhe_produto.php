@@ -1,5 +1,5 @@
 <div class="col-md-7">
-    <img src="../images/imagem-900x600.jpg" class="img-fluid" alt="images/imagem-900x600.jpg" width="100%">
+    <img src="<?php __DIR__ ?>/assets/images/imagem-900x600.jpg" class="img-fluid" alt="images/imagem-900x600.jpg" width="100%">
 </div>
 <div class="col-md-5 ps-5">
     <h2 class="mb-0"><?= htmlspecialchars($produto['nome']); ?></h2>

@@ -1,5 +1,5 @@
 <div class="card mb-5 shadow-sm">
-    <img src="images/imagem-600x400.jpg" srcset="images/imagem-600x400.jpg 2x, images/imagem-900x600.jpg 3x" class="bd-placeholder-img card-img-top" width="100%" alt="Kit em Promoção">
+    <img src="<?php __DIR__ ?>/assets/images/imagem-600x400.jpg" srcset="images/imagem-600x400.jpg 2x, images/imagem-900x600.jpg 3x" class="bd-placeholder-img card-img-top" width="100%" alt="Kit em Promoção">
     <div class="card-body pb-4">              
         <h5 class="card-title"><?= htmlspecialchars($kit['nome']); ?></h5>
         <p class="card-text descricao mt-2"><?= htmlspecialchars($kit['descricao']); ?></p>

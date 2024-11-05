@@ -1,10 +1,14 @@
+<?php startSection('title'); ?>
+Teste
+<?php endSection(); ?>
+
 <?php
-ob_start(); // Inicia o buffer de saída
 if (empty($_SESSION['csrf_token'])) {
     $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
 }
 ?>
 
+<?php startSection('content'); ?>
 <div class="row">
     <div class="col-md-6">
         <h4 class="titulo-pagina mb-0">
@@ -15,8 +19,8 @@ if (empty($_SESSION['csrf_token'])) {
     <div class="col-md-6">
         <nav aria-label="breadcrumb" class="d-flex justify-content-end">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="<?php echo BASE_URL ?>"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="<?php echo BASE_URL ?>/admin/categorias/index">Categorias</a></li>
+                <li class="breadcrumb-item"><a href="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="/admin/categorias/index">Categorias</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Editar</li>
             </ol>
         </nav>
@@ -24,7 +28,7 @@ if (empty($_SESSION['csrf_token'])) {
 </div>
 <small class="text-muted mb-2">Campo com (*) são obrigatório</small>
 
-<form method="post" action="/admin/categorias/edit/<?php echo $data['id']; ?>" class="mt-5">
+<form method="post" action="/admin/categorias/update/<?php echo $data['id']; ?>" class="mt-5">
     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? ''); ?>">
 
     <div class="row mb-3">
@@ -73,8 +77,6 @@ if (empty($_SESSION['csrf_token'])) {
         </div>
     </div>
 </form>
+<?php endSection(); ?>
 
-<?php
-$content = ob_get_clean(); // Obtém o conteúdo do buffer e limpa o buffer
-$title = 'Editar Categoria';
-require __DIR__ . '/../../layouts/admin.php'; // Inclui o layout mestre
+<?php extend('layouts/admin'); ?>

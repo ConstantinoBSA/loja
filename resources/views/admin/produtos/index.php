@@ -1,11 +1,8 @@
-<?php
-if (!isset($_SESSION['user_authenticated'])) {
-    header('Location: /admin/login');
-    exit();
-}
+<?php startSection('title'); ?>
+Teste
+<?php endSection(); ?>
 
-ob_start(); // Inicia o buffer de saída
-?>
+<?php startSection('content'); ?>
 <div class="row mb-2">
     <div class="col-md-6">
         <h4 class="titulo-pagina">
@@ -16,7 +13,7 @@ ob_start(); // Inicia o buffer de saída
     <div class="col-md-6">
         <nav aria-label="breadcrumb" class="d-flex justify-content-end">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="<?php echo BASE_URL ?>"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Produtos</li>
             </ol>
         </nav>
@@ -25,7 +22,7 @@ ob_start(); // Inicia o buffer de saída
 
 <div class="row mt-3">
     <div class="col-md-6">
-        <a class="btn btn-success" href="/admin/produtos/create"><i class="fa fa-plus fa-fw"></i> Criar Nova Produto</a>
+        <a class="btn btn-success" href="/admin/produtos/adicionar"><i class="fa fa-plus fa-fw"></i> Criar Nova Produto</a>
     </div>
     <div class="col-md-6">
         <form method="GET" action="/admin/produtos/index">
@@ -66,8 +63,8 @@ ob_start(); // Inicia o buffer de saída
                     <td><?php echo $produto['nome']; ?></td>
                     <td><?php echo $produto['slug']; ?></td>
                     <td class="text-center">
-                        <a class="btn btn-secondary btn-sm" href="/admin/produtos/show/<?php echo $produto['id']; ?>"><i class="fa fa-eye"></i></a>
-                        <a class="btn btn-warning btn-sm" href="/admin/produtos/edit/<?php echo $produto['id']; ?>"><i class="fa fa-pencil"></i></a>
+                        <a class="btn btn-secondary btn-sm" href="/admin/produtos/exibir/<?php echo $produto['id']; ?>"><i class="fa fa-eye"></i></a>
+                        <a class="btn btn-warning btn-sm" href="/admin/produtos/editar/<?php echo $produto['id']; ?>"><i class="fa fa-pencil"></i></a>
                         <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalDelete<?php echo $produto['id']; ?>"><i class="fa fa-trash"></i></button>
                     </td>
                 </tr>
@@ -125,8 +122,6 @@ ob_start(); // Inicia o buffer de saída
         <?php endif; ?>
     </div>
 </div>
+<?php endSection(); ?>
 
-<?php
-$content = ob_get_clean(); // Obtém o conteúdo do buffer e limpa o buffer
-$title = 'Lista de Produtos';
-require __DIR__ . '/../../layouts/admin.php'; // Inclui o layout mestre
+<?php extend('layouts/admin'); ?>

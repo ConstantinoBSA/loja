@@ -1,14 +1,12 @@
-<?php
-ob_start(); // Inicia o buffer de saída
-if (empty($_SESSION['csrf_token'])) {
-    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
-}
-?>
+<?php startSection('title'); ?>
+Teste
+<?php endSection(); ?>
 
+<?php startSection('content'); ?>
 <h1>Criar Nova Tarefa</h1>
 <a href="/usuarios/index">Voltar</a>
 
-<form method="post" action="/usuarios/create">
+<form method="post" action="/usuarios/store">
     <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? ''); ?>">
     
     <div class="mb-3">
@@ -44,8 +42,6 @@ if (empty($_SESSION['csrf_token'])) {
 
     <button class="btn btn-primary" type="submit">Criar Tarefa</button>
 </form>
+<?php endSection(); ?>
 
-<?php
-$content = ob_get_clean(); // Obtém o conteúdo do buffer e limpa o buffer
-$title = 'Adicionar Tarefa';
-require __DIR__ . '/../layouts/admin.php'; // Inclui o layout mestre
+<?php extend('layouts/admin'); ?>

@@ -1,12 +1,8 @@
-<?php
-if (!isset($_SESSION['user_authenticated'])) {
-    header('Location: /admin/login');
-    exit();
-}
+<?php startSection('title'); ?>
+Teste
+<?php endSection(); ?>
 
-ob_start(); // Inicia o buffer de saída
-?>
-
+<?php startSection('content'); ?>
  <div class="row">
     <div class="col-md-4">
         <div class="card">
@@ -33,8 +29,6 @@ ob_start(); // Inicia o buffer de saída
         </div>
     </div>
 </div>
+<?php endSection(); ?>
 
-<?php
-$content = ob_get_clean(); // Obtém o conteúdo do buffer e limpa o buffer
-$title = 'Lista de Tarefas';
-require __DIR__ . '/../../layouts/pdv.php'; // Inclui o layout mestre
+<?php extend('layouts/pdv'); ?>

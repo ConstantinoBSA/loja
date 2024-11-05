@@ -1,7 +1,3 @@
-<?php
-$config = require __DIR__ . '/../../../config/config.php';
-?>
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -9,56 +5,11 @@ $config = require __DIR__ . '/../../../config/config.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $config['app']['app_name'] ?? '[NOME_PROJETO]'; ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/styles.css">
+    <link rel="stylesheet" href="<?php __DIR__ ?>/assets/css/style.css">
+    <link rel="stylesheet" href="<?php __DIR__ ?>/assets/css/pdv.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
     <!-- Toastr CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-    <style>
-        body {
-            background-color: #f4f4f9;
-        }
-        .header {
-            background: #343a40;
-            padding: 10px;
-            color: white;
-            text-align: center;
-        }
-        .container {
-            margin-top: 20px;
-        }
-        .product-list {
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        .total {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: #28a745;
-        }
-        .btn-finalizar {
-            width: 100%;
-            font-size: 1.2em;
-        }
-        .search-results {
-            list-style: none;
-            padding: 0;
-            max-height: 200px;
-            overflow-y: auto;
-            border: 1px solid #ccc;
-            background: #fff;
-            position: absolute;
-            width: 100%;
-            z-index: 1000;
-        }
-        .search-results li {
-            padding: 5px;
-            border-bottom: 1px solid #ddd;
-            cursor: pointer;
-        }
-        .search-results li:hover {
-            background-color: #f0f0f0;
-        }
-    </style>
 </head>
 <body>
     <div class="header">
@@ -68,15 +19,13 @@ $config = require __DIR__ . '/../../../config/config.php';
     </div>
 
     <div class="container">
-        <?php echo $content; ?>        
+        <?= yieldSection('content') ?>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
-    <!-- Toastr JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <!-- <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script> -->
     <script>
         $(document).ready(function() {
             loadCart();
@@ -185,7 +134,7 @@ $config = require __DIR__ . '/../../../config/config.php';
                     total += subtotal;
                     $('#cart-items').append(
                         `<li class="list-group-item d-flex justify-content-between align-items-center" data-item='${JSON.stringify(item)}'>
-                            <img src="../../images/imagem-300x200.jpg" alt="${item.nome}" style="width: 50px; height: auto;">
+                            <img src="../../assets/images/imagem-300x200.jpg" alt="${item.nome}" style="width: 50px; height: auto;">
                             ${item.nome} (${item.codigo_barras}) - R$${item.preco}
                             <span>Qty: <input type="number" class="quantity" value="${item.quantidade}" min="1" style="width: 50px;"></span>
                             <span>Subtotal: R$${subtotal.toFixed(2)}</span>
@@ -224,7 +173,7 @@ $config = require __DIR__ . '/../../../config/config.php';
         updateTime();
     </script>
 
-    <script src="<?php echo BASE_URL; ?>/js/script.js"></script>
+    <script src="<?php __DIR__ ?>/assets/js/script.js"></script>
     <script>
         $(document).ready(function() {
             <?php if (isset($_SESSION['message']) && isset($_SESSION['message_type'])): ?>

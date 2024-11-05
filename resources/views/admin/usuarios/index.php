@@ -1,17 +1,13 @@
-<?php
-if (!isset($_SESSION['user_authenticated'])) {
-    header('Location: /login');
-    exit();
-}
+<?php startSection('title'); ?>
+Teste
+<?php endSection(); ?>
 
-ob_start(); // Inicia o buffer de saída
-?>
-
+<?php startSection('content'); ?>
 <h2>Lista de Usuários</h2>
 
 <div class="row">
     <div class="col-md-6">
-        <a class="btn btn-success" href="/usuarios/create"><i class="fa fa-plus fa-fw"></i> Criar Novo Usuário</a>
+        <a class="btn btn-success" href="/usuarios/adicionar"><i class="fa fa-plus fa-fw"></i> Criar Novo Usuário</a>
     </div>
     <div class="col-md-6">
         <form method="GET" action="/usuarios/index">
@@ -53,7 +49,7 @@ ob_start(); // Inicia o buffer de saída
                         <?php endif; ?>
                     </td>
                     <td class="text-center">
-                        <a class="btn btn-warning btn-sm" href="/usuarios/edit/<?php echo $usuario['id']; ?>"><i class="fa fa-pencil"></i></a>
+                        <a class="btn btn-warning btn-sm" href="/usuarios/editar/<?php echo $usuario['id']; ?>"><i class="fa fa-pencil"></i></a>
                         <a class="btn btn-danger btn-sm" href="/usuarios/delete/<?php echo $usuario['id']; ?>"><i class="fa fa-trash"></i></a>
                     </td>
                 </tr>
@@ -92,10 +88,6 @@ ob_start(); // Inicia o buffer de saída
         <?php endif; ?>
     </div>
 </div>
+<?php endSection(); ?>
 
-
-
-<?php
-$content = ob_get_clean(); // Obtém o conteúdo do buffer e limpa o buffer
-$title = 'Lista de Usuarios';
-require __DIR__ . '/../layouts/admin.php'; // Inclui o layout mestre
+<?php extend('layouts/admin'); ?>

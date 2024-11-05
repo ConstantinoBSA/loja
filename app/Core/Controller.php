@@ -8,7 +8,7 @@ class Controller
     {
         extract($data);
         $viewPath = __DIR__ . '/../../resources/views/' . $view . '.php';
-
+        
         if (file_exists($viewPath)) {
             require_once $viewPath;
         } else {

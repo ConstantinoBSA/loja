@@ -21,7 +21,7 @@ function isActive($linkPattern, $currentPath)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $config['app']['app_name'] ?? '[NOME_PROJETO]'; ?></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="<?php echo BASE_URL; ?>/css/site.css">
+    <link rel="stylesheet" href="<?php __DIR__ ?>/assets/css/site.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
     <!-- Toastr CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
@@ -30,8 +30,8 @@ function isActive($linkPattern, $currentPath)
     <!-- Cabeçalho com Logo e Menu -->
     <header class="d-flex flex-wrap align-items-center justify-content-between p-3 border-bottom" style="background-color: #F5E111;margin-bottom: -1px">
         <a href="#" class="d-flex align-items-center mb-lg-0 text-dark text-decoration-none position-relative">
-            <img class="logo-principal" src="<?php echo BASE_URL; ?>/images/logo-principal.png" alt="Logo">
-            <img class="logo-textos" src="<?php echo BASE_URL; ?>/images/logo-textos.png" alt="Logo">
+            <img class="logo-principal" src="<?php __DIR__ ?>/assets/images/logo-principal.png" alt="Logo">
+            <img class="logo-textos" src="<?php __DIR__ ?>/assets/images/logo-textos.png" alt="Logo">
         </a>
         <ul class="nav col-12 col-md-auto justify-content-center mb-md-0">
             <li class="<?php echo isActive('', $currentPath); ?>"><a href="/" class="nav-link px-2 link-dark"><i class="fa fa-home fa-fw"></i> Início</a></li>
@@ -47,7 +47,7 @@ function isActive($linkPattern, $currentPath)
 
     <!-- Página Inicial -->
     <main>        
-        <?php echo $content; ?>
+        <?= yieldSection('content') ?>
     </main>
 
     <!-- Rodapé -->
@@ -56,7 +56,7 @@ function isActive($linkPattern, $currentPath)
             <div class="row my-4 align-items-start">
                 <div class="col-md-4">
                     <h4 class="text-start mb-4 display-6 fst-italic" style="font-size: 22px;">Nosso Endereço</h4>
-                    <img src="<?php echo BASE_URL; ?>/images/logo-h-w.png" alt="Logo" width="80%">
+                    <img src="<?php __DIR__ ?>/assets/images/logo-h-w.png" alt="Logo" width="80%">
                     <ul class="mt-3 list-unstyled">
                         <li><span>Avenida Benedito Casado, 58, Centro,</span></li>
                         <li><span>57925-000 Barra de Santo Antônio/AL</span></li>
@@ -118,7 +118,8 @@ function isActive($linkPattern, $currentPath)
     <!-- Toastr JavaScript -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <script src="<?php echo BASE_URL; ?>/js/script.js"></script>
+    <script src="<?php __DIR__ ?>/assets/js/script.js"></script>
+    <script src="<?php __DIR__ ?>/assets/js/site.js"></script>
     <script>
         $(document).ready(function() {
             <?php if (isset($_SESSION['message']) && isset($_SESSION['message_type'])): ?>

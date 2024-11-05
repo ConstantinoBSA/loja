@@ -48,6 +48,11 @@ class CategoriaController extends Controller
 
     public function create()
     {
+        $this->view('admin/categorias/create', ['error' => [], 'data' => []]);
+    }
+
+    public function store()
+    {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
                 die('Token CSRF inválido.');
@@ -85,12 +90,21 @@ class CategoriaController extends Controller
 
                 header('Location: /admin/categorias/index');
             }
-        } else {
-            $this->view('admin/categorias/create', ['error' => [], 'data' => []]);
         }
     }
 
     public function edit($id)
+    {
+        $categoriaModel = new Categoria();
+        $categoria = $categoriaModel->getById($id);
+        if ($categoria) {
+            $this->view('admin/categorias/edit', ['error' => [], 'data' => $categoria]);
+        } else {
+            $this->renderErrorPage('Erro 404', 'Categoria não encontrada.');
+        }
+    }
+
+    public function update($id)
     {
         $categoriaModel = new Categoria();
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -125,13 +139,6 @@ class CategoriaController extends Controller
                 unset($_SESSION['csrf_token']);
 
                 header('Location: /admin/categorias/index');
-            }
-        } else {
-            $categoria = $categoriaModel->getById($id);
-            if ($categoria) {
-                $this->view('admin/categorias/edit', ['error' => [], 'data' => $categoria]);
-            } else {
-                $this->renderErrorPage('Erro 404', 'Categoria não encontrada.');
             }
         }
     }

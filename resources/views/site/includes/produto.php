@@ -1,6 +1,6 @@
 <div class="card mb-5 shadow-sm">
     <span class="badge bg-secondary position-absolute" style="left: 8px; top: 8px"><?= htmlspecialchars($produto['categoria_nome']); ?></span>
-    <img src="images/imagem-600x400.jpg" class="bd-placeholder-img card-img-top" width="100%" alt="Kit em Promoção">
+    <img src="<?php __DIR__ ?>/assets/images/imagem-600x400.jpg" class="bd-placeholder-img card-img-top" width="100%" alt="Kit em Promoção">
     <div class="card-body pb-4">
         <h5 class="card-title"><?= htmlspecialchars($produto['produto_nome']); ?></h5>
         <div class="row">

@@ -31,14 +31,6 @@ function yieldSection($name)
     return $sections[$name] ?? ''; // Retorna o conteúdo da seção ou uma string vazia
 }
 
-function view($view, $data = [])
-{
-    extract($data); // Extrai variáveis do array para uso na view
-    ob_start();
-    require __DIR__ . "/../resources/views/{$view}.php"; // Inclui a view
-    return ob_get_clean(); // Retorna o conteúdo bufferizado
-}
-
 function extend($layout)
 {
     global $sections;

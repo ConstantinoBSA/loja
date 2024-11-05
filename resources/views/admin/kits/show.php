@@ -1,7 +1,8 @@
-<?php
-ob_start(); // Inicia o buffer de saída
-?>
+<?php startSection('title'); ?>
+Teste
+<?php endSection(); ?>
 
+<?php startSection('content'); ?>
 <div class="row mb-2">
     <div class="col-md-6">
         <h4 class="titulo-pagina">
@@ -12,8 +13,8 @@ ob_start(); // Inicia o buffer de saída
     <div class="col-md-6">
         <nav aria-label="breadcrumb" class="d-flex justify-content-end">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="<?php echo BASE_URL ?>"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="<?php echo BASE_URL ?>/kits/index">Kits</a></li>
+                <li class="breadcrumb-item"><a href="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="/kits/index">Kits</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Exibir</li>
             </ol>
         </nav>
@@ -27,7 +28,7 @@ ob_start(); // Inicia o buffer de saída
     <li class="mt-3"><span>Status:</span> <b><?php echo $kit['status'] ?></b></li>
     <li class="mt-3">
         <span>Ações:</span>
-        <a class="btn btn-warning" href="/admin/kits/edit/<?php echo $kit['id']; ?>"><i class="fa fa-pencil fa-fw"></i> Editar Kit</a>
+        <a class="btn btn-warning" href="/admin/kits/editar/<?php echo $kit['id']; ?>"><i class="fa fa-pencil fa-fw"></i> Editar Kit</a>
         <button type="button" class="btn btn-danger ms-1" data-bs-toggle="modal" data-bs-target="#modalDelete<?php echo $kit['id']; ?>"><i class="fa fa-trash fa-fw"></i> Deletar Kit</button>
         <a class="btn btn-secondary ms-1" href="/admin/kits/index"><i class="fa fa-arrow-left fa-fw"></i> Voltar a Listagem</a>
     </li>
@@ -51,8 +52,6 @@ ob_start(); // Inicia o buffer de saída
         </div>
     </div>
 </div>
+<?php endSection(); ?>
 
-<?php
-$content = ob_get_clean(); // Obtém o conteúdo do buffer e limpa o buffer
-$title = 'Editar Kit';
-require __DIR__ . '/../../layouts/admin.php'; // Inclui o layout mestre
+<?php extend('layouts/admin'); ?>

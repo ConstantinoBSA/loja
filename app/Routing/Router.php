@@ -9,55 +9,68 @@ class Router
     protected $routes = [];
     protected $protectedRoutes = [];
 
-    public function add($method, $uri, $action, $protected = false)
+    public function addRoute($method, $route, $controllerAction, $protected = false)
     {
-        $method = strtoupper($method);
-        $this->routes[$method][$uri] = $action;
+        $this->routes[strtoupper($method)][$route] = $controllerAction;
         if ($protected) {
-            $this->protectedRoutes[] = $uri;
+            $this->protectedRoutes[] = $route;
         }
     }
 
-    public function match($method, $uri)
+    public function dispatch($requestUri, $requestMethod)
     {
-        if (isset($this->routes[$method])) {
-            if (isset($this->routes[$method][$uri])) {
-                return true;
+        $requestMethod = strtoupper($requestMethod);
+        
+        foreach ($this->routes[$requestMethod] as $route => $controllerAction) {
+            
+            // Converter a rota com parâmetros dinâmicos em uma expressão regular
+            $routePattern = $this->convertToPattern($route);
+            
+            // Verificar se a URL requisitada corresponde ao padrão da rota
+            if (preg_match($routePattern, $requestUri, $matches)) {
+                list($controllerClass, $method) = $controllerAction;
+
+                if (class_exists($controllerClass) && method_exists($controllerClass, $method)) {
+                    $controller = new $controllerClass();
+
+                    // Remover os índices numéricos do array de correspondências
+                    $params = array_filter($matches, 'is_string', ARRAY_FILTER_USE_KEY);
+
+                    // Verifique se a rota é protegida
+                    if (in_array($route, $this->protectedRoutes)) {
+                        $middleware = new AuthMiddleware();
+                        $middleware->handle($_SERVER, function() use ($controller, $method, $params) {
+                            call_user_func_array([$controller, $method], $params);
+                        });
+                    } else {
+                        // Chame o controlador diretamente se a rota não for protegida
+                        call_user_func_array([$controller, $method], $params);
+                    }
+                    exit;
+                } else {
+                    $this->renderErrorPage('Erro 404', 'Controlador ou método não encontrado.');
+                }
             }
         }
-    
-        return false;
+
+        // Se nenhuma rota corresponder, renderizar erro 404
+        $this->renderErrorPage('Erro 404', 'Rota não encontrada.');
     }
 
-    public function dispatch($uri, $method)
+    protected function convertToPattern($route)
     {
-        global $request;
-
-        if ($this->match($method, $uri)) {
-            $this->executeAction($uri, $method);
-            if (in_array($uri, $this->protectedRoutes)) {
-                $middleware = new AuthMiddleware();
-                $middleware->handle($request, function() use ($uri, $method) {
-                    $this->executeAction($uri, $method);
-                });
-            } else {
-                $this->executeAction($uri, $method);
+        $routePattern = preg_replace_callback('/\{(\w+)\}/', function ($matches) {
+            switch ($matches[1]) {
+                case 'id':
+                    return '(?P<id>\d+)'; // Captura um ID numérico
+                case 'slug':
+                    return '(?P<slug>[\w\-]+)'; // Captura um slug alfanumérico com hífens
+                default:
+                    return '(?P<' . $matches[1] . '>[^/]+)'; // Captura qualquer valor para outros parâmetros
             }
-        } else {
-            $this->renderErrorPage('Erro 404', 'Página não encontrada.');
-        }
-    }
-    
-    protected function executeAction($uri, $method)
-    {
-        list($controllerClass, $method) = $this->routes[$method][$uri];
-
-        if (class_exists($controllerClass) && method_exists($controllerClass, $method)) {
-            $controller = new $controllerClass();
-            call_user_func([$controller, $method]);
-        } else {
-            $this->renderErrorPage('Erro 404', 'Controlador ou método não encontrado.');
-        }
+        }, $route);
+        $routePattern = str_replace('/', '\/', $routePattern);
+        return '/^' . $routePattern . '$/';
     }
 
     protected function renderErrorPage($title, $message)
