@@ -2,6 +2,12 @@
 Teste
 <?php endSection(); ?>
 
+<?php
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+?>
+
 <?php startSection('content'); ?>
 <div class="row">
     <div class="col-md-6">
@@ -29,8 +35,8 @@ Teste
         <label for="nome" class="col-sm-3 col-form-label text-end text-muted">Nome: <span class="requerido"></span></label>
         <div class="col-sm-7">
             <input type="text" class="form-control" id="nome" name="nome" value="<?php echo htmlspecialchars($data['nome'] ?? ''); ?>">
-            <?php if (!empty($error['nome'])): ?>
-                <p class="error"><?php echo htmlspecialchars($error['nome']); ?></p>
+            <?php if (!empty($errors['nome'])): ?>
+                <p class="error"><?php echo htmlspecialchars($errors['nome']); ?></p>
             <?php endif; ?>
         </div>
     </div>
@@ -39,8 +45,8 @@ Teste
         <label for="slug" class="col-sm-3 col-form-label text-end text-muted">Slug: <span class="requerido"></span></label>
         <div class="col-sm-7">
             <textarea name="slug" class="form-control" id="slug"><?php echo htmlspecialchars($data['slug'] ?? ''); ?></textarea>
-            <?php if (!empty($error['slug'])): ?>
-                <p class="error"><?php echo htmlspecialchars($error['slug']); ?></p>
+            <?php if (!empty($errors['slug'])): ?>
+                <p class="error"><?php echo htmlspecialchars($errors['slug']); ?></p>
             <?php endif; ?>
         </div>
     </div>
@@ -50,15 +56,15 @@ Teste
         <div class="col-sm-7">
             <select name="status" class="form-select" id="status">
                 <option value="">Selecione...</option>
-                <option value="1" <?php if (($data['status'] ?? '') === 1) {
+                <option value="1" <?php if (($data['status'] ?? '') == 1) {
                     echo 'selected';
                 } ?>>Ativo</option>
-                <option value="0" <?php if (($data['status'] ?? '') === 0) {
+                <option value="0" <?php if (($data['status'] ?? '') == 0) {
                     echo 'selected';
                 } ?>>Inativo</option>
             </select>
-            <?php if (!empty($error['status'])): ?>
-                <p class="error"><?php echo htmlspecialchars($error['status']); ?></p>
+            <?php if (!empty($errors['status'])): ?>
+                <p class="error"><?php echo htmlspecialchars($errors['status']); ?></p>
             <?php endif; ?>
         </div>
     </div>

@@ -5,8 +5,7 @@ session_start();
 chdir(dirname(__DIR__)); // Define o diretório de trabalho para a raiz do projeto
 require __DIR__ . '/../vendor/autoload.php';
 
-use App\Request;
-use App\Routing\Router;
+use App\Core\Request;
 use Dotenv\Dotenv;
 
 // Configurações do Ambiente
@@ -27,9 +26,6 @@ $method = $request->server('REQUEST_METHOD');
 
 // Capturar o host da solicitação (caso precise para algo específico)
 $host = $_SERVER['HTTP_HOST'];
-
-// Criar uma instância do roteador
-$router = new Router();
 
 // Carregar as rotas
 require __DIR__ . '/../routes/web.php';

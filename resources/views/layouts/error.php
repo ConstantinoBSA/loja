@@ -1,4 +1,3 @@
-<!-- src/views/error.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,9 +11,7 @@
         <h1>Erro</h1>
     </header>
     <main>
-        <h2><?php echo htmlspecialchars($errorTitle); ?></h2>
-        <p><?php echo htmlspecialchars($errorMessage); ?></p>
-        <a href="/admin">Voltar para a página inicial</a>
+        <?= yieldSection('content') ?>        
     </main>
     <footer>
         <p>&copy; 2024 Meu Aplicativo</p>

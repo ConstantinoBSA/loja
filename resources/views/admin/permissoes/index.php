@@ -6,15 +6,15 @@ Teste
 <div class="row mb-2">
     <div class="col-md-6">
         <h4 class="titulo-pagina">
-            <span><i class="fa fa-list fa-fw"></i> Categorias</span>
-            <small>Listagem de categorias</small>
+            <span><i class="fa fa-list fa-fw"></i> Permissões</span>
+            <small>Listagem de permissoes</small>
         </h4>
     </div>
     <div class="col-md-6">
         <nav aria-label="breadcrumb" class="d-flex justify-content-end">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
-                <li class="breadcrumb-item active" aria-current="page">Categorias</li>
+                <li class="breadcrumb-item active" aria-current="page">Permissões</li>
             </ol>
         </nav>
     </div>
@@ -22,10 +22,10 @@ Teste
 
 <div class="row mt-3">
     <div class="col-md-6">
-        <a class="btn btn-success" href="/admin/categorias/adicionar"><i class="fa fa-plus fa-fw"></i> Criar Nova Categoria</a>
+        <a class="btn btn-success" href="/admin/permissoes/adicionar"><i class="fa fa-plus fa-fw"></i> Criar Nova Permissao</a>
     </div>
     <div class="col-md-6">
-        <form method="GET" action="/admin/categorias/index">
+        <form method="GET" action="/admin/permissoes/index">
             <div class="input-group">
                 <input type="text" name="search" class="form-control" placeholder="Pesquisar..." value="<?php echo htmlspecialchars($_GET['search'] ?? '', ENT_QUOTES); ?>">
                 <button class="btn btn-outline-secondary" type="submit" id="button-addon2"><i class="fa fa-search"></i></button>
@@ -37,41 +37,33 @@ Teste
 <table class="table table-striped table-bordered table-sm mt-4">
     <thead>
         <tr>
-            <th width="100" class="text-center">Status</th>
             <th width="50" class="text-center">ID</th>
             <th>Nome</th>
-            <th>Slug</th>
+            <th>Descrição</th>
             <th width="140" class="text-center">Ações</th>
         </tr>
     </thead>
     <tbody>
-    <?php if (empty($categorias)): ?>
+    <?php if (empty($permissoes)): ?>
     <tr>
         <td colspan="5" class="text-center">Nenhum registro encontrado.</td>
     </tr>
         <?php else: ?>
-            <?php foreach ($categorias as $categoria): ?>
+            <?php foreach ($permissoes as $permissao): ?>
                 <tr>
+                    <td class="text-center"><?php echo $permissao->id; ?></td>
+                    <td><?php echo $permissao->nome; ?></td>
+                    <td><?php echo $permissao->descricao; ?></td>
                     <td class="text-center">
-                        <?php if ($categoria->status): ?>
-                            <span class="badge bg-success">Ativo</span>
-                        <?php else: ?>
-                            <span class="badge bg-danger">Inativo</span>
-                        <?php endif; ?>
-                    </td>
-                    <td class="text-center"><?php echo $categoria->id; ?></td>
-                    <td><?php echo $categoria->nome; ?></td>
-                    <td><?php echo $categoria->slug; ?></td>
-                    <td class="text-center">
-                        <a class="btn btn-table text-secondary" href="/admin/categorias/exibir/<?php echo $categoria->id; ?>" title="Exibir"><i class="fa fa-eye"></i></a>
-                        <a class="btn btn-table text-warning" href="/admin/categorias/editar/<?php echo $categoria->id; ?>" title="Editar"><i class="fa fa-pen-to-square"></i></a>
-                        <button type="button" class="btn btn-table text-danger" data-bs-toggle="modal" data-bs-target="#modalDelete<?php echo $categoria->id; ?>" title="Deletar"><i class="fa fa-trash"></i></button>
-                        <a class="btn btn-table text-primary" href="/admin/categorias/exibir/<?php echo $categoria->id; ?>" title="Status"><i class="fa fa-check-to-slot"></i></a>
+                        <a class="btn btn-table text-secondary" href="/admin/permissoes/exibir/<?php echo $permissao->id; ?>" title="Exibir"><i class="fa fa-eye"></i></a>
+                        <a class="btn btn-table text-warning" href="/admin/permissoes/editar/<?php echo $permissao->id; ?>" title="Editar"><i class="fa fa-pen-to-square"></i></a>
+                        <button type="button" class="btn btn-table text-danger" data-bs-toggle="modal" data-bs-target="#modalDelete<?php echo $permissao->id; ?>" title="Deletar"><i class="fa fa-trash"></i></button>
+                        <a class="btn btn-table text-primary" href="/admin/permissoes/exibir/<?php echo $permissao->id; ?>" title="Status"><i class="fa fa-check-to-slot"></i></a>
                     </td>
                 </tr>
 
                 <!-- Modal -->
-                <div class="modal fade" id="modalDelete<?php echo $categoria->id; ?>" tabindex="-1" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+                <div class="modal fade" id="modalDelete<?php echo $permissao->id; ?>" tabindex="-1" aria-labelledby="modalDeleteLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -83,7 +75,7 @@ Teste
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-                                <a href="/admin/categorias/delete/<?php echo $categoria->id; ?>" class="btn btn-primary">Sim</a>
+                                <a href="/admin/permissoes/delete/<?php echo $permissao->id; ?>" class="btn btn-primary">Sim</a>
                             </div>
                         </div>
                     </div>
@@ -95,7 +87,7 @@ Teste
 
 <div class="row">
     <div class="col-md-4">
-        Mostrando de <?php echo $start; ?> até <?php echo $end; ?> de <?php echo $totalCategorias; ?> registros
+        Mostrando de <?php echo $start; ?> até <?php echo $end; ?> de <?php echo $totalPermissoes; ?> registros
     </div>
     <div class="col-md-8">
         <?php if ($totalPages > 1): ?>

@@ -6,16 +6,15 @@ use App\Core\Model;
 use PDO;
 use PDOException;
 
-class Categoria extends Model
+class Permissao extends Model
 {
-    private $table_name = "categorias";
+    private $table_name = "permissoes";
 
     public $id;
     public $nome;
-    public $slug;
-    public $status;
+    public $descricao;
 
-    // Retorna todas as categorias, com suporte a busca, limite e offset
+    // Retorna todas as permissoes, com suporte a busca, limite e offset
     public function getAll($search = '', $limit = 10, $offset = 0)
     {
         try {
@@ -23,9 +22,9 @@ class Categoria extends Model
             $params = [];
 
             if ($search) {
-                $sql .= " WHERE nome LIKE :searchName OR slug LIKE :searchSlug";
+                $sql .= " WHERE nome LIKE :searchName OR slug LIKE :searchDescricao";
                 $params[':searchName'] = '%' . $search . '%';
-                $params[':searchSlug'] = '%' . $search . '%';
+                $params[':searchDescricao'] = '%' . $search . '%';
             }
 
             $sql .= " ORDER BY nome ASC";
@@ -40,7 +39,7 @@ class Categoria extends Model
             $stmt->execute();
             $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-            // Transformar cada linha em um objeto Categoria
+            // Transformar cada linha em um objeto Permissao
             return array_map([$this, 'mapRowToModel'], $rows);
         } catch (PDOException $e) {
             // Log the error message
@@ -49,43 +48,25 @@ class Categoria extends Model
         }
     }
 
-    // Mapeia a linha do banco de dados para o objeto Categoria
+    // Mapeia a linha do banco de dados para o objeto Permissao
     protected function mapRowToModel(array $row)
     {
         $model = new self();
         $model->id = htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8');
         $model->nome = htmlspecialchars($row['nome'], ENT_QUOTES, 'UTF-8');
-        $model->slug = htmlspecialchars($row['slug'], ENT_QUOTES, 'UTF-8');
-        $model->status = htmlspecialchars($row['status'], ENT_QUOTES, 'UTF-8');
+        $model->descricao = htmlspecialchars($row['descricao'], ENT_QUOTES, 'UTF-8');
         return $model;
     }
 
-    // Retorna categorias ativas
-    public function getAllActive()
-    {
-        try {
-            $sql = "SELECT * FROM " . $this->table_name . " WHERE status = 'active' ORDER BY nome ASC";
-            $stmt = $this->pdo->prepare($sql);
-            $stmt->execute();
-            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-            return array_map([$this, 'mapRowToModel'], $rows);
-        } catch (PDOException $e) {
-            // Log the error message
-            error_log($e->getMessage());
-            return [];
-        }
-    }
-
-    // Retorna a contagem de categorias
-    public function countCategorias($search = '')
+    // Retorna a contagem de permissoes
+    public function countPermissoes($search = '')
     {
         try {
             $sql = "SELECT COUNT(*) FROM " . $this->table_name;
             $params = [];
 
             if ($search) {
-                $sql .= " WHERE nome LIKE :search OR slug LIKE :search";
+                $sql .= " WHERE nome LIKE :search OR descricao LIKE :search";
                 $params[':search'] = '%' . $search . '%';
             }
 
@@ -104,7 +85,7 @@ class Categoria extends Model
         }
     }
 
-    // Busca uma categoria por ID
+    // Busca uma permissao por ID
     public function getById($id)
     {
         try {
@@ -120,12 +101,12 @@ class Categoria extends Model
         }
     }
 
-    // Cria uma nova categoria
-    public function create($nome, $slug, $status)
+    // Cria uma nova permissao
+    public function create($nome, $descricao)
     {
         try {
-            $stmt = $this->pdo->prepare('INSERT INTO ' . $this->table_name . ' (nome, slug, status) VALUES (?, ?, ?)');
-            return $stmt->execute([$nome, $slug, $status]);
+            $stmt = $this->pdo->prepare('INSERT INTO ' . $this->table_name . ' (nome, descricao) VALUES (?, ?)');
+            return $stmt->execute([$nome, $descricao]);
         } catch (PDOException $e) {
             // Log the error message
             error_log($e->getMessage());
@@ -133,12 +114,12 @@ class Categoria extends Model
         }
     }
 
-    // Atualiza uma categoria existente
-    public function update($id, $nome, $slug, $status)
+    // Atualiza uma permissao existente
+    public function update($id, $nome, $descricao)
     {
         try {
-            $stmt = $this->pdo->prepare('UPDATE ' . $this->table_name . ' SET nome = ?, slug = ?, status = ? WHERE id = ?');
-            return $stmt->execute([$nome, $slug, $status, $id]);
+            $stmt = $this->pdo->prepare('UPDATE ' . $this->table_name . ' SET nome = ?, descricao = ? WHERE id = ?');
+            return $stmt->execute([$nome, $descricao, $id]);
         } catch (PDOException $e) {
             // Log the error message
             error_log($e->getMessage());
@@ -146,7 +127,7 @@ class Categoria extends Model
         }
     }
 
-    // Deleta uma categoria
+    // Deleta uma permissao
     public function delete($id)
     {
         try {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Routing;
+namespace App\Core;
 
 use App\Middleware\AuthMiddleware;
 
@@ -77,7 +77,7 @@ class Router
     {
         $errorTitle = $title;
         $errorMessage = $message;
-        include __DIR__ . '/../../resources/views/admin/error.php';
+        include __DIR__ . '/../../resources/views/errors/default.php';
         exit();
     }
 }

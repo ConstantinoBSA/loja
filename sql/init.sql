@@ -1,8 +1,13 @@
-DROP TABLE IF EXISTS usuarios;
+DROP TABLE IF EXISTS permissao_usuario;
+DROP TABLE IF EXISTS perfil_usuario;
+DROP TABLE IF EXISTS perfis;
+DROP TABLE IF EXISTS permissao_perfil;
+DROP TABLE IF EXISTS permissoes;
 DROP TABLE IF EXISTS password_resets;
 DROP TABLE IF EXISTS email_verifications;
 DROP TABLE IF EXISTS audit_logs;
 DROP TABLE IF EXISTS access_logs;
+DROP TABLE IF EXISTS usuarios;
 DROP TABLE IF EXISTS kits_produtos;
 DROP TABLE IF EXISTS kits;
 DROP TABLE IF EXISTS produtos;
@@ -57,6 +62,42 @@ CREATE TABLE access_logs (
     user_agent TEXT NOT NULL,
     session_id VARCHAR(255) NOT NULL,
     FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
+
+CREATE TABLE perfis (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) UNIQUE NOT NULL,
+    descricao VARCHAR(255)
+);
+
+CREATE TABLE permissoes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) UNIQUE NOT NULL,
+    descricao VARCHAR(255)
+);
+
+CREATE TABLE perfil_usuario (
+    usuario_id INT,
+    perfil_id INT,
+    PRIMARY KEY (usuario_id, perfil_id),
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (perfil_id) REFERENCES perfis(id) ON DELETE CASCADE
+);
+
+CREATE TABLE permissao_perfil (
+    perfil_id INT,
+    permissao_id INT,
+    PRIMARY KEY (perfil_id, permissao_id),
+    FOREIGN KEY (perfil_id) REFERENCES perfis(id) ON DELETE CASCADE,
+    FOREIGN KEY (permissao_id) REFERENCES permissoes(id) ON DELETE CASCADE
+);
+
+CREATE TABLE permissao_usuario (
+    usuario_id INT,
+    permissao_id INT,
+    PRIMARY KEY (usuario_id, permissao_id),
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
+    FOREIGN KEY (permissao_id) REFERENCES permissoes(id) ON DELETE CASCADE
 );
 
 -- Tabela de Categorias
@@ -168,7 +209,10 @@ CREATE TABLE subscribers (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-INSERT INTO usuarios (name, email, email_verified_at, password, status) VALUES ('João da Silva', 'joao.silva@example.com', '2024-11-03 16:00:00', '$2y$10$PgJZ8QykkZmU7IMiOu4/Q.dKo6JPbyLl1mxJiRuHr7xNVEFYWdXZe', TRUE);
+INSERT INTO usuarios (name, email, email_verified_at, password, status) VALUES 
+('João da Silva', 'joao.silva@example.com', '2024-11-03 16:00:00', '$2y$10$PgJZ8QykkZmU7IMiOu4/Q.dKo6JPbyLl1mxJiRuHr7xNVEFYWdXZe', TRUE),
+('Usuario 2 Teste', 'usuario1@example.com', '2024-11-03 16:00:00', '$2y$10$PgJZ8QykkZmU7IMiOu4/Q.dKo6JPbyLl1mxJiRuHr7xNVEFYWdXZe', TRUE),
+('Usuario Fulano de Tal', 'usuario2@example.com', '2024-11-03 16:00:00', '$2y$10$PgJZ8QykkZmU7IMiOu4/Q.dKo6JPbyLl1mxJiRuHr7xNVEFYWdXZe', TRUE);
 
 INSERT INTO categorias (nome, slug) VALUES
 ('Cosméticos', 'cosmeticos'),
@@ -239,3 +283,28 @@ INSERT INTO kits_produtos (kit_id, produto_id) VALUES
 (10, 20), -- Kit Aventura ao Ar Livre inclui Mochila de Trilhas
 (10, 21); -- Kit Aventura ao Ar Livre inclui Lanterna LED
 
+INSERT INTO perfis (nome, descricao) VALUES
+('Administrador', 'Tem acesso total ao sistema'),
+('Editor', 'Pode editar conteúdos'),
+('Visualizador', 'Pode visualizar conteúdos');
+
+INSERT INTO permissoes (nome, descricao) VALUES
+('gerenciar_usuarios', 'Pode adicionar, editar e remover usuários'),
+('editar_conteudo', 'Pode editar qualquer conteúdo'),
+('visualizar_relatórios', 'Pode acessar relatórios do sistema');
+
+INSERT INTO perfil_usuario (usuario_id, perfil_id) VALUES
+(1, 1), -- Usuário 1 tem perfil de Administrador
+(2, 2), -- Usuário 2 tem perfil de Editor
+(3, 3), -- Usuário 3 tem perfil de Visualizador
+(3, 2); -- Usuário 3 também tem perfil de Editor
+
+INSERT INTO permissao_perfil (perfil_id, permissao_id) VALUES
+(1, 1), -- Administrador pode gerenciar usuários
+(1, 2), -- Administrador pode editar conteúdo
+(1, 3), -- Administrador pode visualizar relatórios
+(2, 2), -- Editor pode editar conteúdo
+(3, 3); -- Visualizador pode visualizar relatórios
+
+INSERT INTO permissao_usuario (usuario_id, permissao_id) VALUES
+(2, 3); -- Usuário 2 tem permissão específica para visualizar relatórios, além do seu perfil

@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 
-:root{
+:root {
     --cor-primary: #F5E111;
     --cor-secondary: #212529;
 }
@@ -40,15 +40,17 @@ body {
 }
 
 .btn {
-    font-size: 14px!important;
+    font-size: 14px !important;
     padding-top: 8px;
     padding-bottom: 8px;
 }
-table .btn{
+
+table .btn {
     padding-top: 5px;
     padding-bottom: 5px;
-    font-size: 12px!important;
+    font-size: 12px !important;
 }
+
 table tr th {
     font-size: 13px;
 }
@@ -56,16 +58,19 @@ table tr th {
 table tr td {
     font-size: 15px;
 }
-table thead tr th{
-    padding-top: 8px!important;
-    padding-bottom: 8px!important;
-    border-bottom-width: 2px!important;
-    border-color: #dee2e6!important;
+
+table thead tr th {
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+    border-bottom-width: 2px !important;
+    border-color: #dee2e6 !important;
 }
-table tbody tr:last-child td{
-    border-bottom-width: 2px!important;
-    border-color: #dee2e6!important;
+
+table tbody tr:last-child td {
+    border-bottom-width: 2px !important;
+    border-color: #dee2e6 !important;
 }
+
 .titulo-pagina {
     font-size: 20px;
 }
@@ -76,29 +81,37 @@ table tbody tr:last-child td{
     margin-left: 5px;
     color: #999
 }
-.requerido:after{
-    content:'*';
+
+.requerido:after {
+    content: '*';
     color: red;
 }
+
 .error {
     color: red;
     font-size: 13px !important;
     font-weight: bold;
     padding-top: 3px;
 }
-.nav-header{
+
+.nav-header {
     text-transform: uppercase;
-    font-weight: bold;
+    font-weight: 700 !important;
     font-size: 13px;
     margin-top: 15px;
     margin-bottom: 5px;
 }
-.nav-item{
+
+.nav-item {
     font-size: 14px;
 }
-.nav-item .nav-link{
-    padding: .3rem 1rem;
+
+.nav-item .nav-link {
+    padding: .2rem 1rem;
+    color: rgba(0, 0, 0, 0.5);
+    font-weight: 600;
 }
+
 table tr td {
     vertical-align: middle;
 }
@@ -119,6 +132,17 @@ ul.lista-item li span {
     text-align: right;
     margin-right: 5px;
 }
-.col-form-label{
+
+.col-form-label {
     font-size: 15px;
+}
+a.btn-table,
+button.btn-table{
+    border: none;
+    padding: 0;
+    font-size: 16px!important;
+    margin-right: 6px;
+}
+.btn-table:last-child{
+    margin-right: 0;
 }

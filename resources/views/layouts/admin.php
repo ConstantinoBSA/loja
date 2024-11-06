@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="<?php __DIR__ ?>/assets/css/style.css">
     <link rel="stylesheet" href="<?php __DIR__ ?>/assets/css/admin.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
-    <!-- Toastr CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
 </head>
 <body>
@@ -53,6 +52,8 @@
                 <li class="nav-item"><a class="nav-link" href="/admin/contatos/index">- Contatos</a></li>
                 <li class="nav-item"><a class="nav-link" href="/admin/inscricoes/index">- Inscrições</a></li>
                 <li class="nav-header"><i class="fa fa-plus fa-fw"></i> Sistema</li>
+                <li class="nav-item"><a class="nav-link" href="/admin/permissoes/index">- Permissões</a></li>
+                <li class="nav-item"><a class="nav-link" href="/admin/perfis/index">- Perfis</a></li>
                 <li class="nav-item"><a class="nav-link" href="/admin/usuarios/index">- Usuários</a></li>
                 <li class="nav-item mt-4"><a class="nav-link ps-0" href="/admin/consultas/vendas"><i class="fa fa-search fa-fw"></i> Consultas</a></li>
                 <li class="nav-item mt-1"><a class="nav-link ps-0" href="/admin/relatorios/vendas"><i class="fa fa-print fa-fw"></i> Relatórios</a></li>

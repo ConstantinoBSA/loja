@@ -3,16 +3,16 @@
 namespace App\Controllers\Admin;
 
 use App\Core\Controller;
-use App\Models\Categoria;
+use App\Models\Permissao;
 
-class CategoriaController extends Controller
+class PermissaoController extends Controller
 {
-    private $categoriaModel;
+    private $permissaoModel;
 
     public function __construct()
     {
         parent::__construct();
-        $this->categoriaModel = new Categoria();
+        $this->permissaoModel = new Permissao();
     }
 
     public function index()
@@ -23,30 +23,30 @@ class CategoriaController extends Controller
             $limit = 10;
             $offset = ($page - 1) * $limit;
 
-            $categorias = $this->categoriaModel->getAll($search, $limit, $offset);
-            $totalCategorias = $this->categoriaModel->countCategorias($search);
-            $totalPages = ceil($totalCategorias / $limit);
+            $permissoes = $this->permissaoModel->getAll($search, $limit, $offset);
+            $totalPermissoes = $this->permissaoModel->countPermissoes($search);
+            $totalPages = ceil($totalPermissoes / $limit);
 
             $start = $offset + 1;
-            $end = min($offset + $limit, $totalCategorias);
+            $end = min($offset + $limit, $totalPermissoes);
 
-            $this->view('admin/categorias/index', [
-                'categorias' => $categorias,
+            $this->view('admin/permissoes/index', [
+                'permissoes' => $permissoes,
                 'totalPages' => $totalPages,
                 'currentPage' => $page,
-                'totalCategorias' => $totalCategorias,
+                'totalPermissoes' => $totalPermissoes,
                 'start' => $start,
                 'end' => $end,
                 'search' => $search
             ]);
         } catch (\Exception $e) {
-            $this->handleException($e, 'Ocorreu um erro ao obter categorias.');
+            $this->handleException($e, 'Ocorreu um erro ao obter permissoes.');
         }
     }
 
     public function create()
     {
-        if (!$this->hasPermission( 'gerenciar_usuario')) {
+        if (!$this->hasPermission('gerenciar_usuario')) {
             abort('403', 'Você não tem acesso a está área do sistema');
         }
 
@@ -55,7 +55,7 @@ class CategoriaController extends Controller
 
         unset($_SESSION['errors'], $_SESSION['old_data']);
 
-        $this->view('admin/categorias/create', [
+        $this->view('admin/permissoes/create', [
             'errors' => $errors,
             'data' => $oldData
         ]);
@@ -67,13 +67,13 @@ class CategoriaController extends Controller
             $dadosRequisicao = $this->request->all();
 
             if (!$this->validateCsrfToken($dadosRequisicao['csrf_token'])) {
-                $this->redirectToWithMessage('/admin/categorias/adicionar', 'Token CSRF inválido.', 'error');
+                $this->redirectToWithMessage('/admin/permissoes/adicionar', 'Token CSRF inválido.', 'error');
             }
 
             $sanitizedData = $this->sanitizeData($dadosRequisicao);
 
             $rules = [
-                'nome' => 'required|unique:categorias',
+                'nome' => 'required|unique:permissoes',
                 'slug' => 'required',
                 'status' => 'required'
             ];
@@ -83,17 +83,17 @@ class CategoriaController extends Controller
             if (!empty($errors)) {
                 $_SESSION['errors'] = $errors;
                 $_SESSION['old_data'] = $dadosRequisicao;
-                $this->redirect('/admin/categorias/adicionar');
+                $this->redirect('/admin/permissoes/adicionar');
             } else {
                 try {
-                    $categoria = $this->categoriaModel->create($sanitizedData['nome'], $sanitizedData['slug'], $sanitizedData['status']);
-                    if ($categoria) {
-                        $this->redirectToWithMessage('/admin/categorias/index', 'Registro adicionado com sucesso!', 'success');
+                    $permissao = $this->permissaoModel->create($sanitizedData['nome'], $sanitizedData['slug'], $sanitizedData['status']);
+                    if ($permissao) {
+                        $this->redirectToWithMessage('/admin/permissoes/index', 'Registro adicionado com sucesso!', 'success');
                     } else {
-                        $this->redirectToWithMessage('/admin/categorias/adicionar', 'Erro ao adicionar categoria. Por favor, tente novamente!', 'error');
+                        $this->redirectToWithMessage('/admin/permissoes/adicionar', 'Erro ao adicionar permissao. Por favor, tente novamente!', 'error');
                     }
                 } catch (\Exception $e) {
-                    $this->handleException($e, 'Erro ao adicionar a categoria.');
+                    $this->handleException($e, 'Erro ao adicionar a permissao.');
                 }
             }
         }
@@ -102,9 +102,9 @@ class CategoriaController extends Controller
     public function edit($id)
     {
         try {
-            $categoria = $this->categoriaModel->getById($id);
-            if (!$categoria) {
-                throw new \Exception('Categoria não encontrada.', 404);
+            $permissao = $this->permissaoModel->getById($id);
+            if (!$permissao) {
+                throw new \Exception('Permissao não encontrada.', 404);
             }
 
             $errors = $_SESSION['errors'] ?? [];
@@ -113,13 +113,13 @@ class CategoriaController extends Controller
             unset($_SESSION['errors'], $_SESSION['old_data']);
 
             foreach ($oldData as $key => $value) {
-                if (property_exists($categoria, $key)) {
-                    $categoria->$key = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+                if (property_exists($permissao, $key)) {
+                    $permissao->$key = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
                 }
             }
 
-            $this->view('admin/categorias/edit', [
-                'categoria' => $categoria,
+            $this->view('admin/permissoes/edit', [
+                'permissao' => $permissao,
                 'errors' => $errors
             ]);
         } catch (\Exception $e) {
@@ -133,13 +133,13 @@ class CategoriaController extends Controller
             $dadosRequisicao = $this->request->all();
 
             if (!$this->validateCsrfToken($dadosRequisicao['csrf_token'])) {
-                $this->redirectToWithMessage('/admin/categorias/editar/' . $id, 'Token CSRF inválido.', 'error');
+                $this->redirectToWithMessage('/admin/permissoes/editar/' . $id, 'Token CSRF inválido.', 'error');
             }
 
             $sanitizedData = $this->sanitizeData($dadosRequisicao);
 
             $rules = [
-                'nome' => "required|unique:categorias,nome,{$id}",
+                'nome' => "required|unique:permissoes,nome,{$id}",
                 'slug' => 'required',
                 'status' => 'required'
             ];
@@ -149,17 +149,17 @@ class CategoriaController extends Controller
             if (!empty($errors)) {
                 $_SESSION['errors'] = $errors;
                 $_SESSION['old_data'] = $dadosRequisicao;
-                $this->redirect('/admin/categorias/editar/' . $id);
+                $this->redirect('/admin/permissoes/editar/' . $id);
             } else {
                 try {
-                    $categoria = $this->categoriaModel->update($id, $sanitizedData['nome'], $sanitizedData['slug'], $sanitizedData['status']);
-                    if ($categoria) {
-                        $this->redirectToWithMessage('/admin/categorias/index', 'Registro editado com sucesso!', 'success');
+                    $permissao = $this->permissaoModel->update($id, $sanitizedData['nome'], $sanitizedData['slug'], $sanitizedData['status']);
+                    if ($permissao) {
+                        $this->redirectToWithMessage('/admin/permissoes/index', 'Registro editado com sucesso!', 'success');
                     } else {
-                        $this->redirectToWithMessage('/admin/categorias/editar/' . $id, 'Erro ao editar categoria. Por favor, tente novamente!', 'error');
+                        $this->redirectToWithMessage('/admin/permissoes/editar/' . $id, 'Erro ao editar permissao. Por favor, tente novamente!', 'error');
                     }
                 } catch (\Exception $e) {
-                    $this->handleException($e, 'Erro ao editar a categoria.');
+                    $this->handleException($e, 'Erro ao editar a permissao.');
                 }
             }
         }
@@ -168,11 +168,11 @@ class CategoriaController extends Controller
     public function show($id)
     {
         try {
-            $categoria = $this->categoriaModel->getById($id);
-            if ($categoria) {
-                $this->view('admin/categorias/show', ['categoria' => $categoria]);
+            $permissao = $this->permissaoModel->getById($id);
+            if ($permissao) {
+                $this->view('admin/permissoes/show', ['permissao' => $permissao]);
             } else {
-                $this->renderErrorPage('Erro 404', 'Categoria não encontrada.');
+                $this->renderErrorPage('Erro 404', 'Permissao não encontrada.');
             }
         } catch (\Exception $e) {
             $this->renderErrorPage('Erro 404', $e->getMessage());
@@ -182,14 +182,14 @@ class CategoriaController extends Controller
     public function delete($id)
     {
         try {
-            $categoria = $this->categoriaModel->delete($id);
-            if ($categoria) {
-                $this->redirectToWithMessage('/admin/categorias/index', 'Registro deletado com sucesso!', 'success');
+            $permissao = $this->permissaoModel->delete($id);
+            if ($permissao) {
+                $this->redirectToWithMessage('/admin/permissoes/index', 'Registro deletado com sucesso!', 'success');
             } else {
-                $this->redirectToWithMessage('/admin/categorias/index', 'Erro ao deletar categoria. Por favor, tente novamente!', 'error');
+                $this->redirectToWithMessage('/admin/permissoes/index', 'Erro ao deletar permissao. Por favor, tente novamente!', 'error');
             }
         } catch (\Exception $e) {
-            $this->handleException($e, 'Erro ao deletar a categoria.');
+            $this->handleException($e, 'Erro ao deletar a permissao.');
         }
     }
 

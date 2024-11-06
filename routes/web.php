@@ -1,6 +1,6 @@
 <?php
 
-use App\Routing\Router;
+use App\Core\Router;
 
 use App\Controllers\Site\IndexController;
 use App\Controllers\Site\CosmeticoController;
@@ -11,13 +11,15 @@ use App\Controllers\Site\DestaqueController;
 
 use App\Controllers\Admin\HomeController;
 use App\Controllers\Admin\AuthController;
+use App\Controllers\Admin\PermissaoController;
+use App\Controllers\Admin\PerfilController;
+use App\Controllers\Admin\UsuarioController;
 use App\Controllers\Admin\CategoriaController;
 use App\Controllers\Admin\FormaPagamentoController;
 use App\Controllers\Admin\ClienteController;
 use App\Controllers\Admin\ProdutoController;
 use App\Controllers\Admin\KitController as KitAdminController;
 use App\Controllers\Admin\VendaController;
-use App\Controllers\Admin\UsuarioController;
 use App\Controllers\Admin\ConsultaController;
 use App\Controllers\Admin\RelatorioController;
 
@@ -55,6 +57,33 @@ $router->addRoute('GET', 'admin/logout', [AuthController::class, 'logout'], true
 $router->addRoute('GET', 'admin', [HomeController::class, 'index'], true);
 $router->addRoute('GET', 'admin/perfil-usuario', [HomeController::class, 'perfil'], true);
 $router->addRoute('GET', 'admin/configuracoes', [HomeController::class, 'configuracoes'], true);
+
+// Permissões
+$router->addRoute('GET', 'admin/permissoes/index', [PermissaoController::class, 'index'], true);
+$router->addRoute('GET', 'admin/permissoes/adicionar', [PermissaoController::class, 'create'], true);
+$router->addRoute('POST', 'admin/permissoes/store', [PermissaoController::class, 'store'], true);
+$router->addRoute('GET', 'admin/permissoes/editar/{id}', [PermissaoController::class, 'edit'], true);
+$router->addRoute('POST', 'admin/permissoes/update/{id}', [PermissaoController::class, 'update'], true);
+$router->addRoute('GET', 'admin/permissoes/exibir/{id}', [PermissaoController::class, 'show'], true);
+$router->addRoute('GET', 'admin/permissoes/delete/{id}', [PermissaoController::class, 'delete'], true);
+
+// Perfis
+$router->addRoute('GET', 'admin/perfis/index', [PerfilController::class, 'index'], true);
+$router->addRoute('GET', 'admin/perfis/adicionar', [PerfilController::class, 'create'], true);
+$router->addRoute('POST', 'admin/perfis/store', [PerfilController::class, 'store'], true);
+$router->addRoute('GET', 'admin/perfis/editar/{id}', [PerfilController::class, 'edit'], true);
+$router->addRoute('POST', 'admin/perfis/update/{id}', [PerfilController::class, 'update'], true);
+$router->addRoute('GET', 'admin/perfis/exibir/{id}', [PerfilController::class, 'show'], true);
+$router->addRoute('GET', 'admin/perfis/delete/{id}', [PerfilController::class, 'delete'], true);
+
+// Usuários
+$router->addRoute('GET', 'admin/usuarios/index', [UsuarioController::class, 'index'], true);
+$router->addRoute('GET', 'admin/usuarios/adicionar', [UsuarioController::class, 'create'], true);
+$router->addRoute('POST', 'admin/usuarios/store', [UsuarioController::class, 'store'], true);
+$router->addRoute('GET', 'admin/usuarios/editar/{id}', [UsuarioController::class, 'edit'], true);
+$router->addRoute('POST', 'admin/usuarios/update/{id}', [UsuarioController::class, 'update'], true);
+$router->addRoute('GET', 'admin/usuarios/exibir/{id}', [UsuarioController::class, 'show'], true);
+$router->addRoute('GET', 'admin/usuarios/delete/{id}', [UsuarioController::class, 'delete'], true);
 
 // Categorias
 $router->addRoute('GET', 'admin/categorias/index', [CategoriaController::class, 'index'], true);
@@ -109,15 +138,6 @@ $router->addRoute('GET', 'admin/vendas/editar/{id}', [VendaController::class, 'e
 $router->addRoute('POST', 'admin/vendas/update/{id}', [VendaController::class, 'update'], true);
 $router->addRoute('GET', 'admin/vendas/exibir/{id}', [VendaController::class, 'show'], true);
 $router->addRoute('GET', 'admin/vendas/delete/{id}', [VendaController::class, 'delete'], true);
-
-// Usuários
-$router->addRoute('GET', 'admin/usuarios/index', [UsuarioController::class, 'index'], true);
-$router->addRoute('GET', 'admin/usuarios/adicionar', [UsuarioController::class, 'create'], true);
-$router->addRoute('POST', 'admin/usuarios/store', [UsuarioController::class, 'store'], true);
-$router->addRoute('GET', 'admin/usuarios/editar/{id}', [UsuarioController::class, 'edit'], true);
-$router->addRoute('POST', 'admin/usuarios/update/{id}', [UsuarioController::class, 'update'], true);
-$router->addRoute('GET', 'admin/usuarios/exibir/{id}', [UsuarioController::class, 'show'], true);
-$router->addRoute('GET', 'admin/usuarios/delete/{id}', [UsuarioController::class, 'delete'], true);
 
 // Consultas
 $router->addRoute('GET', 'admin/consultas/vendas', [ConsultaController::class, 'vendas'], true);
