@@ -13,7 +13,7 @@ Teste
     </div>
 </div>
 
-<div class="row mt-5">
+<div class="row">
     <div class="col-md-3 text-center">
         <h1><?php echo $total_vendas ?></h1>
         <span class="text-muted">Total de Vendas</span>
@@ -44,7 +44,7 @@ Teste
     var options = {
         chart: {
             type: 'bar',
-            height: 350
+            height: 250
         },
         title: {
             text: 'Vendas por Mês - Ano <?= $anoAtual ?>',

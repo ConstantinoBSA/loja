@@ -2,12 +2,13 @@
 
 use App\Core\Auth;
 use App\Core\Database;
+use App\Models\Configuracao;
 
 function dd(...$terms)
 {
     echo '<pre>';
     foreach ($terms as $term) {
-        var_dump($term);
+        print_r($term);
     }
     echo '</pre>';
     die;
@@ -96,3 +97,19 @@ function isActiveSection($sectionName)
     // Verifique se a URL atual contém o nome da seção
     return strpos($currentRoute, '/' . $sectionName) !== false ? 'active' : '';
 }
+
+function config()
+{
+    $configModel = new Configuracao;
+    $configuracoes = $configModel->getAllConfiguracoes();
+
+    return $configuracoes;
+}
+
+function isRouter($route) {
+    // Obter o URI da requisição atual
+    $currentUri = trim(parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH), '/');
+    // Comparar com o route fornecido
+    return $currentUri === trim($route, '/');
+}
+

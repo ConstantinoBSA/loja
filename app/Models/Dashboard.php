@@ -9,11 +9,11 @@ class Dashboard extends Model
     function getVendasPorMes($ano) {
         $stmt = $this->pdo->prepare("
             SELECT 
-                MONTH(data_venda) AS mes, 
+                MONTH(data) AS mes, 
                 SUM(total) AS total
             FROM vendas
-            WHERE YEAR(data_venda) = :ano
-            GROUP BY MONTH(data_venda)
+            WHERE YEAR(data) = :ano
+            GROUP BY MONTH(data)
         ");
         $stmt->execute(['ano' => $ano]);
         return $stmt->fetchAll(\PDO::FETCH_KEY_PAIR);

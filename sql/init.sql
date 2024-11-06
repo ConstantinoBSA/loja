@@ -26,14 +26,16 @@ CREATE TABLE usuarios (
     email VARCHAR(255) NOT NULL UNIQUE,
     email_verified_at TIMESTAMP NULL DEFAULT NULL,
     password VARCHAR(255) NOT NULL,
-    status BOOLEAN NOT NULL DEFAULT TRUE
+    status BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE password_resets (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
     token VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     INDEX (email)
 );
 
@@ -41,7 +43,7 @@ CREATE TABLE email_verifications (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL,
     token VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     INDEX (email)
 );
 
@@ -50,7 +52,7 @@ CREATE TABLE audit_logs (
     user_id INT NOT NULL,
     action VARCHAR(255) NOT NULL,
     details TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
@@ -62,6 +64,8 @@ CREATE TABLE access_logs (
     ip_address VARCHAR(45) NOT NULL,
     user_agent TEXT NOT NULL,
     session_id VARCHAR(255) NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (user_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
@@ -69,7 +73,9 @@ CREATE TABLE perfis (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) UNIQUE NOT NULL,
     label VARCHAR(255) UNIQUE NOT NULL,
-    descricao VARCHAR(255)
+    descricao VARCHAR(255),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE permissoes (
@@ -77,12 +83,16 @@ CREATE TABLE permissoes (
     nome VARCHAR(255) UNIQUE NOT NULL,
     label VARCHAR(255) UNIQUE NOT NULL,
     descricao VARCHAR(255),
-    agrupamento VARCHAR(255)
+    agrupamento VARCHAR(255),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE perfil_usuario (
     usuario_id INT,
     perfil_id INT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (usuario_id, perfil_id),
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
     FOREIGN KEY (perfil_id) REFERENCES perfis(id) ON DELETE CASCADE
@@ -91,6 +101,8 @@ CREATE TABLE perfil_usuario (
 CREATE TABLE permissao_perfil (
     perfil_id INT,
     permissao_id INT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (perfil_id, permissao_id),
     FOREIGN KEY (perfil_id) REFERENCES perfis(id) ON DELETE CASCADE,
     FOREIGN KEY (permissao_id) REFERENCES permissoes(id) ON DELETE CASCADE
@@ -99,31 +111,35 @@ CREATE TABLE permissao_perfil (
 CREATE TABLE permissao_usuario (
     usuario_id INT,
     permissao_id INT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (usuario_id, permissao_id),
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
     FOREIGN KEY (permissao_id) REFERENCES permissoes(id) ON DELETE CASCADE
 );
 
 CREATE TABLE configuracoes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
     chave VARCHAR(255) UNIQUE NOT NULL,
     valor TEXT,
-    descricao VARCHAR(255)
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Tabela de Categorias
 CREATE TABLE categorias (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
     slug VARCHAR(255) UNIQUE,
-    status BOOLEAN DEFAULT TRUE
+    status BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Tabela de Formas de Pagamento
 CREATE TABLE formas_pagamento (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
-    status BOOLEAN DEFAULT TRUE
+    status BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE clientes (
@@ -133,12 +149,11 @@ CREATE TABLE clientes (
     email VARCHAR(100) UNIQUE NOT NULL,
     data_nascimento DATE,
     endereco VARCHAR(255),
-    status ENUM('ativo', 'inativo') DEFAULT 'ativo',
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    status BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- Tabela de Produtos
 CREATE TABLE produtos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) NOT NULL,
@@ -156,7 +171,9 @@ CREATE TABLE produtos (
     pontos INT DEFAULT 0,
     promocao BOOLEAN DEFAULT FALSE,
     destaque BOOLEAN DEFAULT FALSE,
-    status BOOLEAN DEFAULT TRUE,
+    status BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (categoria_id) REFERENCES categorias(id)
 );
 
@@ -174,12 +191,16 @@ CREATE TABLE kits (
     data_lancamento DATE,
     destaque BOOLEAN DEFAULT FALSE,
     imagem VARCHAR(255),
-    status BOOLEAN DEFAULT TRUE
+    status BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 CREATE TABLE kits_produtos (
     kit_id INT,
     produto_id INT,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (kit_id, produto_id),
     FOREIGN KEY (kit_id) REFERENCES kits(id) ON DELETE CASCADE,
     FOREIGN KEY (produto_id) REFERENCES produtos(id) ON DELETE CASCADE
@@ -190,11 +211,13 @@ CREATE TABLE vendas (
     cliente_id INT,
     forma_pagamento_id INT,
     numero VARCHAR(255) UNIQUE,
-    data_venda DATETIME DEFAULT CURRENT_TIMESTAMP,
+    data DATETIME DEFAULT CURRENT_TIMESTAMP,
     total DECIMAL(10, 2) NOT NULL,
+    status BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (cliente_id) REFERENCES clientes(id) ON DELETE CASCADE,
-    FOREIGN KEY (forma_pagamento_id) REFERENCES formas_pagamento(id) ON DELETE CASCADE,
-    status BOOLEAN DEFAULT TRUE
+    FOREIGN KEY (forma_pagamento_id) REFERENCES formas_pagamento(id) ON DELETE CASCADE
 );
 
 CREATE TABLE itens_venda (
@@ -203,6 +226,8 @@ CREATE TABLE itens_venda (
     produto_id INT,
     quantidade INT,
     preco DECIMAL(10, 2),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (venda_id) REFERENCES vendas(id)
 );
 
@@ -211,13 +236,15 @@ CREATE TABLE contatos (
     nome VARCHAR(255) NOT NULL,
     email VARCHAR(255) NOT NULL,
     mensagem TEXT NOT NULL,
-    data_contato DATETIME DEFAULT CURRENT_TIMESTAMP
+    status BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE subscribers (
     id INT AUTO_INCREMENT PRIMARY KEY,
     email VARCHAR(255) NOT NULL UNIQUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    status BOOLEAN NOT NULL DEFAULT TRUE,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
 INSERT INTO usuarios (name, email, email_verified_at, password, status) VALUES 
@@ -235,8 +262,8 @@ INSERT INTO formas_pagamento (nome) VALUES
 ('Cartão de Débito'),
 ('Cartão de Crédito');
 
-INSERT INTO clientes (nome, telefone, endereco, data_nascimento, email, status) 
-VALUES ('Cliente Exemplo', '123456789', 'Rua Exemplo, 123', '1990-01-01', 'cliente@exemplo.com', 'ativo');
+INSERT INTO clientes (nome, telefone, endereco, data_nascimento, email) 
+VALUES ('Cliente Exemplo', '123456789', 'Rua Exemplo, 123', '1990-01-01', 'cliente@exemplo.com');
 
 INSERT INTO produtos (nome, codigo, descricao, preco, preco_promocional, codigo_barras, estoque, slug, imagem, categoria_id, informacoes_relevantes, data_lancamento, promocao, destaque) VALUES
 ('Creme Hidratante', 'CH001', 'Creme hidratante para todos os tipos de pele', 29.90, 24.90, '123456789012', 50, 'creme-hidratante', 'creme.jpg', 1, 'Ideal para uso diário.', '2024-01-15', FALSE, TRUE),
@@ -334,11 +361,11 @@ INSERT INTO permissao_perfil (perfil_id, permissao_id) VALUES
 INSERT INTO permissao_usuario (usuario_id, permissao_id) VALUES
 (2, 3); -- Usuário 2 tem permissão específica para visualizar relatórios, além do seu perfil
 
-INSERT INTO configuracoes (chave, valor, descricao) VALUES
-('site_name', 'Meu Site', 'O nome do site exibido na barra de título.'),
-('maintenance_mode', '0', 'Ativa ou desativa o modo de manutenção.'),
-('items_per_page', '10', 'Número de itens exibidos por página em listas.'),
-('contact_email', 'contato@meusite.com', 'Endereço de email de contato principal.'),
-('timezone', 'America/Sao_Paulo', 'Fuso horário padrão do sistema.'),
-('enable_signups', '1', 'Permitir novos registros de usuários.'),
-('currency', 'BRL', 'Moeda padrão para transações.');
+INSERT INTO configuracoes (chave, valor) VALUES
+('site_name', 'Meu Site'),
+('maintenance_mode', '0'),
+('items_per_page', '10'),
+('contact_email', 'contato@meusite.com'),
+('timezone', 'America/Sao_Paulo'),
+('enable_signups', '1'),
+('currency', 'BRL');

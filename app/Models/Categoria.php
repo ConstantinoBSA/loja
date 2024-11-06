@@ -122,9 +122,10 @@ class Categoria extends Model
     }
 
     // Cria uma nova categoria
-    public function create($nome, $slug, $status)
+    public function create($nome, $status)
     {
         try {
+            $slug = generateSlug($nome);
             $stmt = $this->pdo->prepare('INSERT INTO ' . $this->table_name . ' (nome, slug, status) VALUES (?, ?, ?)');
             return $stmt->execute([$nome, $slug, $status]);
         } catch (PDOException $e) {
@@ -135,9 +136,10 @@ class Categoria extends Model
     }
 
     // Atualiza uma categoria existente
-    public function update($id, $nome, $slug, $status)
+    public function update($id, $nome, $status)
     {
         try {
+            $slug = generateSlug($nome);
             $stmt = $this->pdo->prepare('UPDATE ' . $this->table_name . ' SET nome = ?, slug = ?, status = ? WHERE id = ?');
             return $stmt->execute([$nome, $slug, $status, $id]);
         } catch (PDOException $e) {
@@ -155,6 +157,31 @@ class Categoria extends Model
             return $stmt->execute([$id]);
         } catch (PDOException $e) {
             // Log the error message
+            error_log($e->getMessage());
+            return false;
+        }
+    }
+
+    public function alterarStatus($id)
+    {
+        try {
+            // Primeiro, obtenha o status atual do registro
+            $stmt = $this->pdo->prepare('SELECT status FROM ' . $this->table_name . ' WHERE id = ?');
+            $stmt->execute([$id]);
+            $currentStatus = $stmt->fetchColumn();
+            
+            if ($currentStatus) {
+                $newStatus = 0;
+            }else{
+                $newStatus = 1;
+            }
+            
+            // Agora atualize o status para o valor invertido
+            $stmt = $this->pdo->prepare('UPDATE ' . $this->table_name . ' SET status = ? WHERE id = ?');
+
+            return $stmt->execute([$newStatus, $id]);
+        } catch (PDOException $e) {
+            // Registrar a mensagem de erro
             error_log($e->getMessage());
             return false;
         }

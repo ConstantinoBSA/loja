@@ -41,16 +41,6 @@ if (empty($_SESSION['csrf_token'])) {
         </div>
     </div>
 
-    <div class="row mb-3">
-        <label for="slug" class="col-sm-3 col-form-label text-end text-muted">Slug: <span class="requerido"></span></label>
-        <div class="col-sm-7">
-            <textarea name="slug" class="form-control" id="slug"><?php echo htmlspecialchars($data['slug'] ?? ''); ?></textarea>
-            <?php if (!empty($errors['slug'])): ?>
-                <p class="error"><?php echo htmlspecialchars($errors['slug']); ?></p>
-            <?php endif; ?>
-        </div>
-    </div>
-
     <div class="row mb-4">
         <label for="status" class="col-sm-3 col-form-label text-end text-muted">Status: <span class="requerido"></span></label>
         <div class="col-sm-7">

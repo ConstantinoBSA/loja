@@ -27,8 +27,15 @@ use App\Controllers\Admin\PdvController;
 
 $router = new Router();
 
+// Verifique se a URL atual é a raiz
+if (isRouter('')) {
+    // Redirecionar para /home
+    header('Location: /home');
+    exit();
+}
+
 // Site
-$router->addRoute('GET', '', [IndexController::class, 'index']);
+$router->addRoute('GET', 'home', [IndexController::class, 'index']);
 $router->addRoute('GET', 'cosmeticos', [CosmeticoController::class, 'index']);
 $router->addRoute('GET', 'cosmeticos/{slug}', [CosmeticoController::class, 'detalhes']);
 $router->addRoute('GET', 'perfumaria', [PerfumariaController::class, 'index']);
@@ -95,6 +102,7 @@ $router->addRoute('GET', 'admin/categorias/editar/{id}', [CategoriaController::c
 $router->addRoute('POST', 'admin/categorias/update/{id}', [CategoriaController::class, 'update'], true);
 $router->addRoute('GET', 'admin/categorias/exibir/{id}', [CategoriaController::class, 'show'], true);
 $router->addRoute('GET', 'admin/categorias/delete/{id}', [CategoriaController::class, 'delete'], true);
+$router->addRoute('GET', 'admin/categorias/status/{id}', [CategoriaController::class, 'status'], true);
 
 // Formas de Pagamento
 $router->addRoute('GET', 'admin/formas_pagamento/index', [FormaPagamentoController::class, 'index'], true);

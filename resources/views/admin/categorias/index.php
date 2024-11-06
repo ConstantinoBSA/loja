@@ -66,7 +66,7 @@ Teste
                         <a class="btn btn-table text-secondary" href="/admin/categorias/exibir/<?php echo $categoria->id; ?>" title="Exibir"><i class="fa fa-eye"></i></a>
                         <a class="btn btn-table text-warning" href="/admin/categorias/editar/<?php echo $categoria->id; ?>" title="Editar"><i class="fa fa-pen-to-square"></i></a>
                         <button type="button" class="btn btn-table text-danger" data-bs-toggle="modal" data-bs-target="#modalDelete<?php echo $categoria->id; ?>" title="Deletar"><i class="fa fa-trash"></i></button>
-                        <a class="btn btn-table text-primary" href="/admin/categorias/exibir/<?php echo $categoria->id; ?>" title="Status"><i class="fa fa-check-to-slot"></i></a>
+                        <button type="button" class="btn btn-table text-primary" data-bs-toggle="modal" data-bs-target="#modalStatus<?php echo $categoria->id; ?>" title="Status"><i class="fa fa-check-to-slot"></i></button>
                     </td>
                 </tr>
 
@@ -84,6 +84,25 @@ Teste
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
                                 <a href="/admin/categorias/delete/<?php echo $categoria->id; ?>" class="btn btn-primary">Sim</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Status -->
+                <div class="modal fade" id="modalStatus<?php echo $categoria->id; ?>" tabindex="-1" aria-labelledby="modalStatusLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalStatusLabel">Confirmação de mudança de status</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h6>Você deseja realmente alterar o status?</h6>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+                                <a href="/admin/categorias/status/<?php echo $categoria->id; ?>" class="btn btn-primary">Sim</a>
                             </div>
                         </div>
                     </div>

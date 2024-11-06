@@ -3,7 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>asd</title>
+    <title><?php echo config()['site_name'] ?? '' ?></title>
+
+    <!-- favicon -->
+    <link rel="apple-touch-icon" sizes="57x57" href="<?php __DIR__ ?>/assets/images/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="<?php __DIR__ ?>/assets/images/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="<?php __DIR__ ?>/assets/images/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="<?php __DIR__ ?>/assets/images/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="<?php __DIR__ ?>/assets/images/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="<?php __DIR__ ?>/assets/images/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="<?php __DIR__ ?>/assets/images/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="<?php __DIR__ ?>/assets/images/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="<?php __DIR__ ?>/assets/images/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="<?php __DIR__ ?>/assets/images/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="<?php __DIR__ ?>/assets/images/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="<?php __DIR__ ?>/assets/images/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="<?php __DIR__ ?>/assets/images/favicon/favicon-16x16.png">
+    <link rel="manifest" href="<?php __DIR__ ?>/assets/images/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="<?php __DIR__ ?>/assets/images/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="<?php __DIR__ ?>/assets/css/style.css">
     <link rel="stylesheet" href="<?php __DIR__ ?>/assets/css/admin.css">
@@ -13,7 +33,7 @@
 <body>
     <header class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/"><img src="<?php __DIR__ ?>/assets/images/logo.jpg" alt="LOGO" width="30" class="me-2">asd</a>
+            <a class="navbar-brand" href="/"><img src="<?php __DIR__ ?>/assets/images/logo.jpg" alt="LOGO" width="30" class="me-2"><?php echo config()['site_name'] ?? '' ?></a>
             <form class="d-flex ms-auto">
                 <div class="input-group me-2">
                     <input type="search" class="form-control" placeholder="Procurar" style="width: 450px;">
@@ -22,7 +42,8 @@
             </form>
             <div class="dropdown ms-3">
                 <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <?php echo auth()->user()->name ?? 'Usuário'; ?> (<?php echo auth()->user()->email ?? ''; ?>)
+                    <img src="<?php __DIR__ ?>/assets/images/user-perfil.png" class="rounded-circle me-2" alt="User Image" style="width: 30px;height: 30px">
+                    <span class="d-none d-md-inline"><?php echo auth()->user()->name ?? '[ Usuário NI ]'; ?></span>                    
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                     <li><a class="dropdown-item" href="/admin/perfil-usuario">Perfil</a></li>
@@ -49,7 +70,7 @@
                 <?php if (hasPermission('formas_pagamento')): ?>
                 <li class="nav-item"><a class="nav-link <?= isActiveSection('formas_pagamento') ?>" href="/admin/formas_pagamento/index">- Formas de Pagamento</a></li>
                 <?php endif; ?>
-                <li class="nav-header"><i class="fa fa-plus fa-fw"></i> Gerenciamento</li>
+                <li class="nav-header"><i class="fa fa-stream fa-fw"></i> Gerenciamento</li>
                 <?php if (hasPermission('clientes')): ?>
                 <li class="nav-item"><a class="nav-link <?= isActiveSection('clientes') ?>" href="/admin/clientes/index">- Clientes</a></li>
                 <?php endif; ?>
@@ -65,14 +86,14 @@
                 <?php if (hasPermission('pdv')): ?>
                 <li class="nav-item"><a class="nav-link <?= isActiveSection('pdv') ?>" href="/admin/pdv/index" target="_blank">- PDV</a></li>
                 <?php endif; ?>
-                <li class="nav-header"><i class="fa fa-plus fa-fw"></i> Site</li>
+                <li class="nav-header"><i class="fa fa-satellite-dish fa-fw"></i> Site</li>
                 <?php if (hasPermission('contatos')): ?>
                 <li class="nav-item"><a class="nav-link <?= isActiveSection('contatos') ?>" href="/admin/contatos/index">- Contatos</a></li>
                 <?php endif; ?>
                 <?php if (hasPermission('inscricoes')): ?>
                 <li class="nav-item"><a class="nav-link <?= isActiveSection('inscricoes') ?>" href="/admin/inscricoes/index">- Inscrições</a></li>
                 <?php endif; ?>
-                <li class="nav-header"><i class="fa fa-plus fa-fw"></i> Sistema</li>
+                <li class="nav-header"><i class="fa fa-user-lock fa-fw"></i> Sistema</li>
                 <?php if (hasPermission('permissoes')): ?>
                 <li class="nav-item"><a class="nav-link <?= isActiveSection('permissoes') ?>" href="/admin/permissoes/index">- Permissões</a></li>
                 <?php endif; ?>

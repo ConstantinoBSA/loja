@@ -8,7 +8,7 @@
 body {
     font-family: "DM Sans", sans-serif;
     display: flex;
-    min-height: 100vh;
+    min-height: calc(100vh - 62px)!important;
     flex-direction: column;
     color: #444 !important;
 }
@@ -32,7 +32,7 @@ body {
 .breadcrumb {
     font-size: 12px;
     text-transform: uppercase;
-    font-weight: 600;
+    font-weight: 500;
 }
 
 .breadcrumb a {

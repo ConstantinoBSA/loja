@@ -1,6 +1,7 @@
 <?php
 ob_start();
 session_start();
+date_default_timezone_set('America/Recife');
 
 chdir(dirname(__DIR__)); // Define o diretório de trabalho para a raiz do projeto
 require __DIR__ . '/../vendor/autoload.php';

@@ -74,7 +74,6 @@ class CategoriaController extends Controller
 
             $rules = [
                 'nome' => 'required|unique:categorias',
-                'slug' => 'required',
                 'status' => 'required'
             ];
 
@@ -86,7 +85,7 @@ class CategoriaController extends Controller
                 $this->redirect('/admin/categorias/adicionar');
             } else {
                 try {
-                    $categoria = $this->categoriaModel->create($sanitizedData['nome'], $sanitizedData['slug'], $sanitizedData['status']);
+                    $categoria = $this->categoriaModel->create($sanitizedData['nome'], $sanitizedData['status']);
                     if ($categoria) {
                         $this->redirectToWithMessage('/admin/categorias/index', 'Registro adicionado com sucesso!', 'success');
                     } else {
@@ -140,7 +139,6 @@ class CategoriaController extends Controller
 
             $rules = [
                 'nome' => "required|unique:categorias,nome,{$id}",
-                'slug' => 'required',
                 'status' => 'required'
             ];
 
@@ -152,7 +150,7 @@ class CategoriaController extends Controller
                 $this->redirect('/admin/categorias/editar/' . $id);
             } else {
                 try {
-                    $categoria = $this->categoriaModel->update($id, $sanitizedData['nome'], $sanitizedData['slug'], $sanitizedData['status']);
+                    $categoria = $this->categoriaModel->update($id, $sanitizedData['nome'], $sanitizedData['status']);
                     if ($categoria) {
                         $this->redirectToWithMessage('/admin/categorias/index', 'Registro editado com sucesso!', 'success');
                     } else {
@@ -193,6 +191,20 @@ class CategoriaController extends Controller
         }
     }
 
+    public function status($id)
+    {
+        try {
+            $categoria = $this->categoriaModel->alterarStatus($id);
+            if ($categoria) {
+                $this->redirectToWithMessage('/admin/categorias/index', 'Status alterado com sucesso!', 'success');
+            } else {
+                $this->redirectToWithMessage('/admin/categorias/index', 'Erro ao alterar status. Por favor, tente novamente!', 'error');
+            }
+        } catch (\Exception $e) {
+            $this->handleException($e, 'Erro ao alterar status.');
+        }
+    }
+
     private function renderErrorPage($title, $message)
     {
         $errorTitle = $title;
@@ -205,7 +217,6 @@ class CategoriaController extends Controller
     {
         return [
             'nome' => $this->sanitizer->sanitizeString($data['nome']),
-            'slug' => $this->sanitizer->sanitizeString($data['slug']),
             'status' => $this->sanitizer->sanitizeString($data['status']),
         ];
     }

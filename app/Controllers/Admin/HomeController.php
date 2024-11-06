@@ -74,11 +74,32 @@ class HomeController extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['config'])) {
             $configs = $_POST['config'];
+    
+            // Obter todas as chaves atuais no banco de dados
+            $configuracoesAtuais = $this->configModel->getAllConfiguracoes();
+            $chavesAtuais = array_keys($configuracoesAtuais);
+    
+            // Processar cada entrada do formulário
             foreach ($configs as $chave => $valor) {
-                $this->configModel->updateConfiguracao($chave, $valor);
-            }            
+                if (!empty($valor)) {
+                    // Se a chave já existe, atualize o valor
+                    if (in_array($chave, $chavesAtuais)) {
+                        $this->configModel->setConfiguracao($chave, $valor);
+                    } else {
+                        // Caso contrário, adicione uma nova configuração
+                        $this->configModel->setConfiguracao($chave, $valor);
+                    }
+                }
+            }
+    
+            // Verificar chaves que foram removidas do formulário e devem ser excluídas
+            foreach ($chavesAtuais as $chaveAtual) {
+                if (!isset($configs[$chaveAtual])) {
+                    $this->configModel->deleteConfiguracao($chaveAtual);
+                }
+            }
         }
-
+    
         // Redirecionar ou mostrar mensagem de sucesso
         header('Location: /admin/configuracoes');
         exit();

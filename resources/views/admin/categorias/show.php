@@ -25,7 +25,14 @@ Teste
     <li><span>#ID:</span> <b><?php echo $categoria->id ?></b></li>
     <li><span>Nome:</span> <b><?php echo $categoria->nome ?></b></li>
     <li><span>Slug:</span> <b><?php echo $categoria->slug ?></b></li>
-    <li class="mt-3"><span>Status:</span> <b><?php echo $categoria->status ?></b></li>
+    <li class="mt-3">
+        <span>Status:</span> 
+        <?php if ($categoria->status): ?>
+            <b class="badge bg-success">Ativo</b>
+        <?php else: ?>
+            <b class="badge bg-danger">Inativo</b>
+        <?php endif; ?>
+    </li>
     <li class="mt-3">
         <span>Ações:</span>
         <a class="btn btn-warning" href="/admin/categorias/editar/<?php echo $categoria->id; ?>"><i class="fa fa-pencil fa-fw"></i> Editar Categoria</a>

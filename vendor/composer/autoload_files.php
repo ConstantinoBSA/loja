@@ -10,6 +10,6 @@ return array(
     '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => $vendorDir . '/symfony/polyfill-mbstring/bootstrap.php',
     'a4a119a56e50fbb293281d9a48007e0e' => $vendorDir . '/symfony/polyfill-php80/bootstrap.php',
     'e348e8e2f31c5bc77977e681cff2f524' => $baseDir . '/app/Support/blade.php',
-    'f9899e5e93ba60c7faeec4140ef0d52e' => $baseDir . '/app/Support/function.php',
+    'f5798aaaf700dce7f9f17d0ece1af08d' => $baseDir . '/app/Support/functions.php',
     'e90059e556eb526ed31a7db7900e1598' => $baseDir . '/app/Support/help.php',
 );

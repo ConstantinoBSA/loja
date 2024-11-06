@@ -26,6 +26,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: password
       MYSQL_DATABASE: lojadb
+      TZ: America/Recife
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
