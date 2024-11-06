@@ -54,7 +54,7 @@ $router->addRoute('GET', 'admin/login', [AuthController::class, 'showLoginForm']
 $router->addRoute('POST', 'admin/login', [AuthController::class, 'login']);
 $router->addRoute('GET', 'admin/logout', [AuthController::class, 'logout'], true);
 
-$router->addRoute('GET', 'admin', [HomeController::class, 'index'], true);
+$router->addRoute('GET', 'admin/dashboard', [HomeController::class, 'index'], true);
 $router->addRoute('GET', 'admin/perfil-usuario', [HomeController::class, 'perfil'], true);
 $router->addRoute('GET', 'admin/configuracoes', [HomeController::class, 'configuracoes'], true);
 

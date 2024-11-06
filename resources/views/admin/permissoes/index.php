@@ -7,13 +7,13 @@ Teste
     <div class="col-md-6">
         <h4 class="titulo-pagina">
             <span><i class="fa fa-list fa-fw"></i> Permissões</span>
-            <small>Listagem de permissoes</small>
+            <small>Listagem de permissões</small>
         </h4>
     </div>
     <div class="col-md-6">
         <nav aria-label="breadcrumb" class="d-flex justify-content-end">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="/admin/dashboard"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Permissões</li>
             </ol>
         </nav>
@@ -22,7 +22,7 @@ Teste
 
 <div class="row mt-3">
     <div class="col-md-6">
-        <a class="btn btn-success" href="/admin/permissoes/adicionar"><i class="fa fa-plus fa-fw"></i> Criar Nova Permissao</a>
+        <a class="btn btn-success" href="/admin/permissoes/adicionar"><i class="fa fa-plus fa-fw"></i> Criar Nova Permissão</a>
     </div>
     <div class="col-md-6">
         <form method="GET" action="/admin/permissoes/index">
@@ -39,6 +39,7 @@ Teste
         <tr>
             <th width="50" class="text-center">ID</th>
             <th>Nome</th>
+            <th>Label</th>
             <th>Descrição</th>
             <th width="140" class="text-center">Ações</th>
         </tr>
@@ -53,6 +54,7 @@ Teste
                 <tr>
                     <td class="text-center"><?php echo $permissao->id; ?></td>
                     <td><?php echo $permissao->nome; ?></td>
+                    <td><?php echo $permissao->label; ?></td>
                     <td><?php echo $permissao->descricao; ?></td>
                     <td class="text-center">
                         <a class="btn btn-table text-secondary" href="/admin/permissoes/exibir/<?php echo $permissao->id; ?>" title="Exibir"><i class="fa fa-eye"></i></a>

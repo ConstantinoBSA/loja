@@ -6,16 +6,16 @@ use App\Core\Model;
 use PDO;
 use PDOException;
 
-class Permissao extends Model
+class Perfil extends Model
 {
-    private $table_name = "permissoes";
+    private $table_name = "perfis";
 
     public $id;
     public $nome;
     public $label;
     public $descricao;
 
-    // Retorna todas as permissoes, com suporte a busca, limite e offset
+    // Retorna todas as perfis, com suporte a busca, limite e offset
     public function getAll($search = '', $limit = 10, $offset = 0)
     {
         try {
@@ -40,7 +40,7 @@ class Permissao extends Model
             $stmt->execute();
             $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-            // Transformar cada linha em um objeto Permissao
+            // Transformar cada linha em um objeto Perfil
             return array_map([$this, 'mapRowToModel'], $rows);
         } catch (PDOException $e) {
             // Log the error message
@@ -49,7 +49,7 @@ class Permissao extends Model
         }
     }
 
-    // Mapeia a linha do banco de dados para o objeto Permissao
+    // Mapeia a linha do banco de dados para o objeto Perfil
     protected function mapRowToModel(array $row)
     {
         $model = new self();
@@ -60,8 +60,8 @@ class Permissao extends Model
         return $model;
     }
 
-    // Retorna a contagem de permissoes
-    public function countPermissoes($search = '')
+    // Retorna a contagem de perfis
+    public function countPerfis($search = '')
     {
         try {
             $sql = "SELECT COUNT(*) FROM " . $this->table_name;
@@ -88,7 +88,7 @@ class Permissao extends Model
         }
     }
 
-    // Busca uma permissao por ID
+    // Busca uma perfil por ID
     public function getById($id)
     {
         try {
@@ -104,7 +104,7 @@ class Permissao extends Model
         }
     }
 
-    // Cria uma nova permissao
+    // Cria uma nova perfil
     public function create($nome, $label, $descricao)
     {
         try {
@@ -117,7 +117,7 @@ class Permissao extends Model
         }
     }
 
-    // Atualiza uma permissao existente
+    // Atualiza uma perfil existente
     public function update($id, $nome, $label, $descricao)
     {
         try {
@@ -130,7 +130,7 @@ class Permissao extends Model
         }
     }
 
-    // Deleta uma permissao
+    // Deleta uma perfil
     public function delete($id)
     {
         try {

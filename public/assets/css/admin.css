@@ -111,6 +111,10 @@ table tbody tr:last-child td {
     color: rgba(0, 0, 0, 0.5);
     font-weight: 600;
 }
+.nav-item .nav-link:hover,
+.nav-item .nav-link.active {
+    color: rgba(0, 0, 0, 1);
+}
 
 table tr td {
     vertical-align: middle;

@@ -39,24 +39,24 @@
     <div class="main-content">
         <nav class="sidebar">
             <ul class="nav flex-column">
-                <li class="nav-item"><a class="nav-link active ps-0" href="/admin"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link <?= isActiveSection('dashboard') ?> ps-0" href="/admin/dashboard"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
                 <li class="nav-header"><i class="fa fa-plus fa-fw"></i> Cadastros</li>
-                <li class="nav-item"><a class="nav-link" href="/admin/categorias/index">- Categorias</a></li>
-                <li class="nav-item"><a class="nav-link" href="/admin/formas_pagamento/index">- Formas de Pagamento</a></li>
+                <li class="nav-item"><a class="nav-link <?= isActiveSection('categorias') ?>" href="/admin/categorias/index">- Categorias</a></li>
+                <li class="nav-item"><a class="nav-link <?= isActiveSection('formas_pagamento') ?>" href="/admin/formas_pagamento/index">- Formas de Pagamento</a></li>
                 <li class="nav-header"><i class="fa fa-plus fa-fw"></i> Gerenciamento</li>
-                <li class="nav-item"><a class="nav-link" href="/admin/clientes/index">- Clientes</a></li>
-                <li class="nav-item"><a class="nav-link" href="/admin/produtos/index">- Produtos</a></li>
-                <li class="nav-item"><a class="nav-link" href="/admin/kits/index">- Kits</a></li>
-                <li class="nav-item"><a class="nav-link" href="/admin/vendas/index">- Vendas</a></li>
+                <li class="nav-item"><a class="nav-link <?= isActiveSection('clientes') ?>" href="/admin/clientes/index">- Clientes</a></li>
+                <li class="nav-item"><a class="nav-link <?= isActiveSection('produtos') ?>" href="/admin/produtos/index">- Produtos</a></li>
+                <li class="nav-item"><a class="nav-link <?= isActiveSection('kits') ?>" href="/admin/kits/index">- Kits</a></li>
+                <li class="nav-item"><a class="nav-link <?= isActiveSection('vendas') ?>" href="/admin/vendas/index">- Vendas</a></li>
                 <li class="nav-header"><i class="fa fa-plus fa-fw"></i> Site</li>
-                <li class="nav-item"><a class="nav-link" href="/admin/contatos/index">- Contatos</a></li>
-                <li class="nav-item"><a class="nav-link" href="/admin/inscricoes/index">- Inscrições</a></li>
+                <li class="nav-item"><a class="nav-link <?= isActiveSection('contatos') ?>" href="/admin/contatos/index">- Contatos</a></li>
+                <li class="nav-item"><a class="nav-link <?= isActiveSection('inscricoes') ?>" href="/admin/inscricoes/index">- Inscrições</a></li>
                 <li class="nav-header"><i class="fa fa-plus fa-fw"></i> Sistema</li>
-                <li class="nav-item"><a class="nav-link" href="/admin/permissoes/index">- Permissões</a></li>
-                <li class="nav-item"><a class="nav-link" href="/admin/perfis/index">- Perfis</a></li>
-                <li class="nav-item"><a class="nav-link" href="/admin/usuarios/index">- Usuários</a></li>
-                <li class="nav-item mt-4"><a class="nav-link ps-0" href="/admin/consultas/vendas"><i class="fa fa-search fa-fw"></i> Consultas</a></li>
-                <li class="nav-item mt-1"><a class="nav-link ps-0" href="/admin/relatorios/vendas"><i class="fa fa-print fa-fw"></i> Relatórios</a></li>
+                <li class="nav-item"><a class="nav-link <?= isActiveSection('permissoes') ?>" href="/admin/permissoes/index">- Permissões</a></li>
+                <li class="nav-item"><a class="nav-link <?= isActiveSection('perfis') ?>" href="/admin/perfis/index">- Perfis</a></li>
+                <li class="nav-item"><a class="nav-link <?= isActiveSection('usuarios') ?>" href="/admin/usuarios/index">- Usuários</a></li>
+                <li class="nav-item mt-4"><a class="nav-link <?= isActiveSection('consultas') ?> ps-0" href="/admin/consultas/vendas"><i class="fa fa-search fa-fw"></i> Consultas</a></li>
+                <li class="nav-item mt-1"><a class="nav-link <?= isActiveSection('relatorios') ?> ps-0" href="/admin/relatorios/vendas"><i class="fa fa-print fa-fw"></i> Relatórios</a></li>
             </ul>
         </nav>
 

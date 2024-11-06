@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS permissao_usuario;
 DROP TABLE IF EXISTS perfil_usuario;
-DROP TABLE IF EXISTS perfis;
 DROP TABLE IF EXISTS permissao_perfil;
+DROP TABLE IF EXISTS perfis;
 DROP TABLE IF EXISTS permissoes;
 DROP TABLE IF EXISTS password_resets;
 DROP TABLE IF EXISTS email_verifications;
@@ -67,12 +67,14 @@ CREATE TABLE access_logs (
 CREATE TABLE perfis (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) UNIQUE NOT NULL,
+    label VARCHAR(255) UNIQUE NOT NULL,
     descricao VARCHAR(255)
 );
 
 CREATE TABLE permissoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) UNIQUE NOT NULL,
+    label VARCHAR(255) UNIQUE NOT NULL,
     descricao VARCHAR(255)
 );
 
@@ -283,15 +285,15 @@ INSERT INTO kits_produtos (kit_id, produto_id) VALUES
 (10, 20), -- Kit Aventura ao Ar Livre inclui Mochila de Trilhas
 (10, 21); -- Kit Aventura ao Ar Livre inclui Lanterna LED
 
-INSERT INTO perfis (nome, descricao) VALUES
-('Administrador', 'Tem acesso total ao sistema'),
-('Editor', 'Pode editar conteúdos'),
-('Visualizador', 'Pode visualizar conteúdos');
+INSERT INTO perfis (nome, label, descricao) VALUES
+('administrador', 'Administrador', 'Tem acesso total ao sistema'),
+('editor', 'Editor', 'Pode editar conteúdos'),
+('visualizador', 'Visualizador', 'Pode visualizar conteúdos');
 
-INSERT INTO permissoes (nome, descricao) VALUES
-('gerenciar_usuarios', 'Pode adicionar, editar e remover usuários'),
-('editar_conteudo', 'Pode editar qualquer conteúdo'),
-('visualizar_relatórios', 'Pode acessar relatórios do sistema');
+INSERT INTO permissoes (nome, label, descricao) VALUES
+('gerenciar_usuarios', 'Gerenciar Usuários', 'Pode adicionar, editar e remover usuários'),
+('editar_conteudo', 'Editar Conteúdo', 'Pode editar qualquer conteúdo'),
+('visualizar_relatorios', 'Visualizar Relatórios', 'Pode acessar relatórios do sistema');
 
 INSERT INTO perfil_usuario (usuario_id, perfil_id) VALUES
 (1, 1), -- Usuário 1 tem perfil de Administrador

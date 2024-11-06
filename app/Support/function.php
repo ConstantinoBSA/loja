@@ -81,3 +81,12 @@ function abort($code, $mensagem)
     include __DIR__ . '/../../resources/views/errors/'.$code.'.php';
     exit();
 }
+
+function isActiveSection($sectionName)
+{
+    // Obtenha a URL do caminho atual
+    $currentRoute = strtok($_SERVER['REQUEST_URI'], '?');
+
+    // Verifique se a URL atual contém o nome da seção
+    return strpos($currentRoute, '/' . $sectionName) !== false ? 'active' : '';
+}

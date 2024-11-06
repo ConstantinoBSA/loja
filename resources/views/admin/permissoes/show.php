@@ -6,15 +6,15 @@ Teste
 <div class="row mb-2">
     <div class="col-md-6">
         <h4 class="titulo-pagina">
-            <span><i class="fa fa-eye fa-fw"></i> Permissoes</span>
-            <small>Exibindo permissao</small>
+            <span><i class="fa fa-eye fa-fw"></i> Permissões</span>
+            <small>Exibindo permissão</small>
         </h4>
     </div>
     <div class="col-md-6">
         <nav aria-label="breadcrumb" class="d-flex justify-content-end">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
-                <li class="breadcrumb-item"><a href="/permissoes/index">Permissoes</a></li>
+                <li class="breadcrumb-item"><a href="/admin/dashboard"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="/permissoes/index">Permissões</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Exibir</li>
             </ol>
         </nav>
@@ -24,8 +24,8 @@ Teste
 <ul class="lista-item mt-5">
     <li><span>#ID:</span> <b><?php echo $permissao->id ?></b></li>
     <li><span>Nome:</span> <b><?php echo $permissao->nome ?></b></li>
-    <li><span>Slug:</span> <b><?php echo $permissao->slug ?></b></li>
-    <li class="mt-3"><span>Status:</span> <b><?php echo $permissao->status ?></b></li>
+    <li><span>Label:</span> <b><?php echo $permissao->label ?></b></li>
+    <li><span>Descrição:</span> <b><?php echo $permissao->descricao ?></b></li>
     <li class="mt-3">
         <span>Ações:</span>
         <a class="btn btn-warning" href="/admin/permissoes/editar/<?php echo $permissao->id; ?>"><i class="fa fa-pencil fa-fw"></i> Editar Permissao</a>

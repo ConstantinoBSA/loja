@@ -3,16 +3,16 @@
 namespace App\Controllers\Admin;
 
 use App\Core\Controller;
-use App\Models\Categoria;
+use App\Models\Perfil;
 
-class CategoriaController extends Controller
+class PerfilController extends Controller
 {
-    private $categoriaModel;
+    private $perfilModel;
 
     public function __construct()
     {
         parent::__construct();
-        $this->categoriaModel = new Categoria();
+        $this->perfilModel = new Perfil();
     }
 
     public function index()
@@ -23,30 +23,30 @@ class CategoriaController extends Controller
             $limit = 10;
             $offset = ($page - 1) * $limit;
 
-            $categorias = $this->categoriaModel->getAll($search, $limit, $offset);
-            $totalCategorias = $this->categoriaModel->countCategorias($search);
-            $totalPages = ceil($totalCategorias / $limit);
+            $perfis = $this->perfilModel->getAll($search, $limit, $offset);
+            $totalPerfis = $this->perfilModel->countPerfis($search);
+            $totalPages = ceil($totalPerfis / $limit);
 
             $start = $offset + 1;
-            $end = min($offset + $limit, $totalCategorias);
+            $end = min($offset + $limit, $totalPerfis);
 
-            $this->view('admin/categorias/index', [
-                'categorias' => $categorias,
+            $this->view('admin/perfis/index', [
+                'perfis' => $perfis,
                 'totalPages' => $totalPages,
                 'currentPage' => $page,
-                'totalCategorias' => $totalCategorias,
+                'totalPerfis' => $totalPerfis,
                 'start' => $start,
                 'end' => $end,
                 'search' => $search
             ]);
         } catch (\Exception $e) {
-            $this->handleException($e, 'Ocorreu um erro ao obter categorias.');
+            $this->handleException($e, 'Ocorreu um erro ao obter perfis.');
         }
     }
 
     public function create()
     {
-        // if (!$this->hasPermission( 'gerenciar_usuario')) {
+        // if (!$this->hasPermission('gerenciar_usuario')) {
         //     abort('403', 'Você não tem acesso a está área do sistema');
         // }
 
@@ -55,7 +55,7 @@ class CategoriaController extends Controller
 
         unset($_SESSION['errors'], $_SESSION['old_data']);
 
-        $this->view('admin/categorias/create', [
+        $this->view('admin/perfis/create', [
             'errors' => $errors,
             'data' => $oldData
         ]);
@@ -67,15 +67,15 @@ class CategoriaController extends Controller
             $dadosRequisicao = $this->request->all();
 
             if (!$this->validateCsrfToken($dadosRequisicao['csrf_token'])) {
-                $this->redirectToWithMessage('/admin/categorias/adicionar', 'Token CSRF inválido.', 'error');
+                $this->redirectToWithMessage('/admin/perfis/adicionar', 'Token CSRF inválido.', 'error');
             }
 
             $sanitizedData = $this->sanitizeData($dadosRequisicao);
 
             $rules = [
-                'nome' => 'required|unique:categorias',
-                'slug' => 'required',
-                'status' => 'required'
+                'nome' => 'required|unique:perfis',
+                'label' => 'required|unique:perfis',
+                'descricao' => 'required'
             ];
 
             $errors = $this->validator->validate($sanitizedData, $rules);
@@ -83,17 +83,17 @@ class CategoriaController extends Controller
             if (!empty($errors)) {
                 $_SESSION['errors'] = $errors;
                 $_SESSION['old_data'] = $dadosRequisicao;
-                $this->redirect('/admin/categorias/adicionar');
+                $this->redirect('/admin/perfis/adicionar');
             } else {
                 try {
-                    $categoria = $this->categoriaModel->create($sanitizedData['nome'], $sanitizedData['slug'], $sanitizedData['status']);
-                    if ($categoria) {
-                        $this->redirectToWithMessage('/admin/categorias/index', 'Registro adicionado com sucesso!', 'success');
+                    $perfil = $this->perfilModel->create($sanitizedData['nome'], $sanitizedData['label'], $sanitizedData['descricao']);
+                    if ($perfil) {
+                        $this->redirectToWithMessage('/admin/perfis/index', 'Registro adicionado com sucesso!', 'success');
                     } else {
-                        $this->redirectToWithMessage('/admin/categorias/adicionar', 'Erro ao adicionar categoria. Por favor, tente novamente!', 'error');
+                        $this->redirectToWithMessage('/admin/perfis/adicionar', 'Erro ao adicionar permissão. Por favor, tente novamente!', 'error');
                     }
                 } catch (\Exception $e) {
-                    $this->handleException($e, 'Erro ao adicionar a categoria.');
+                    $this->handleException($e, 'Erro ao adicionar a permissão.');
                 }
             }
         }
@@ -102,9 +102,9 @@ class CategoriaController extends Controller
     public function edit($id)
     {
         try {
-            $categoria = $this->categoriaModel->getById($id);
-            if (!$categoria) {
-                throw new \Exception('Categoria não encontrada.', 404);
+            $perfil = $this->perfilModel->getById($id);
+            if (!$perfil) {
+                throw new \Exception('Permissão não encontrada.', 404);
             }
 
             $errors = $_SESSION['errors'] ?? [];
@@ -113,13 +113,13 @@ class CategoriaController extends Controller
             unset($_SESSION['errors'], $_SESSION['old_data']);
 
             foreach ($oldData as $key => $value) {
-                if (property_exists($categoria, $key)) {
-                    $categoria->$key = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
+                if (property_exists($perfil, $key)) {
+                    $perfil->$key = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
                 }
             }
 
-            $this->view('admin/categorias/edit', [
-                'categoria' => $categoria,
+            $this->view('admin/perfis/edit', [
+                'perfil' => $perfil,
                 'errors' => $errors
             ]);
         } catch (\Exception $e) {
@@ -133,15 +133,15 @@ class CategoriaController extends Controller
             $dadosRequisicao = $this->request->all();
 
             if (!$this->validateCsrfToken($dadosRequisicao['csrf_token'])) {
-                $this->redirectToWithMessage('/admin/categorias/editar/' . $id, 'Token CSRF inválido.', 'error');
+                $this->redirectToWithMessage('/admin/perfis/editar/' . $id, 'Token CSRF inválido.', 'error');
             }
 
             $sanitizedData = $this->sanitizeData($dadosRequisicao);
 
             $rules = [
-                'nome' => "required|unique:categorias,nome,{$id}",
-                'slug' => 'required',
-                'status' => 'required'
+                'nome' => "required|unique:perfis,nome,{$id}",
+                'label' => "required|unique:perfis,label,{$id}",
+                'descricao' => 'required'
             ];
 
             $errors = $this->validator->validate($sanitizedData, $rules);
@@ -149,17 +149,17 @@ class CategoriaController extends Controller
             if (!empty($errors)) {
                 $_SESSION['errors'] = $errors;
                 $_SESSION['old_data'] = $dadosRequisicao;
-                $this->redirect('/admin/categorias/editar/' . $id);
+                $this->redirect('/admin/perfis/editar/' . $id);
             } else {
                 try {
-                    $categoria = $this->categoriaModel->update($id, $sanitizedData['nome'], $sanitizedData['slug'], $sanitizedData['status']);
-                    if ($categoria) {
-                        $this->redirectToWithMessage('/admin/categorias/index', 'Registro editado com sucesso!', 'success');
+                    $perfil = $this->perfilModel->update($id, $sanitizedData['nome'], $sanitizedData['label'], $sanitizedData['descricao']);
+                    if ($perfil) {
+                        $this->redirectToWithMessage('/admin/perfis/index', 'Registro editado com sucesso!', 'success');
                     } else {
-                        $this->redirectToWithMessage('/admin/categorias/editar/' . $id, 'Erro ao editar categoria. Por favor, tente novamente!', 'error');
+                        $this->redirectToWithMessage('/admin/perfis/editar/' . $id, 'Erro ao editar perfil. Por favor, tente novamente!', 'error');
                     }
                 } catch (\Exception $e) {
-                    $this->handleException($e, 'Erro ao editar a categoria.');
+                    $this->handleException($e, 'Erro ao editar a perfil.');
                 }
             }
         }
@@ -168,11 +168,11 @@ class CategoriaController extends Controller
     public function show($id)
     {
         try {
-            $categoria = $this->categoriaModel->getById($id);
-            if ($categoria) {
-                $this->view('admin/categorias/show', ['categoria' => $categoria]);
+            $perfil = $this->perfilModel->getById($id);
+            if ($perfil) {
+                $this->view('admin/perfis/show', ['perfil' => $perfil]);
             } else {
-                $this->renderErrorPage('Erro 404', 'Categoria não encontrada.');
+                $this->renderErrorPage('Erro 404', 'Perfil não encontrada.');
             }
         } catch (\Exception $e) {
             $this->renderErrorPage('Erro 404', $e->getMessage());
@@ -182,14 +182,14 @@ class CategoriaController extends Controller
     public function delete($id)
     {
         try {
-            $categoria = $this->categoriaModel->delete($id);
-            if ($categoria) {
-                $this->redirectToWithMessage('/admin/categorias/index', 'Registro deletado com sucesso!', 'success');
+            $perfil = $this->perfilModel->delete($id);
+            if ($perfil) {
+                $this->redirectToWithMessage('/admin/perfis/index', 'Registro deletado com sucesso!', 'success');
             } else {
-                $this->redirectToWithMessage('/admin/categorias/index', 'Erro ao deletar categoria. Por favor, tente novamente!', 'error');
+                $this->redirectToWithMessage('/admin/perfis/index', 'Erro ao deletar perfil. Por favor, tente novamente!', 'error');
             }
         } catch (\Exception $e) {
-            $this->handleException($e, 'Erro ao deletar a categoria.');
+            $this->handleException($e, 'Erro ao deletar a perfil.');
         }
     }
 
@@ -205,8 +205,8 @@ class CategoriaController extends Controller
     {
         return [
             'nome' => $this->sanitizer->sanitizeString($data['nome']),
-            'slug' => $this->sanitizer->sanitizeString($data['slug']),
-            'status' => $this->sanitizer->sanitizeString($data['status']),
+            'label' => $this->sanitizer->sanitizeString($data['label']),
+            'descricao' => $this->sanitizer->sanitizeString($data['descricao']),
         ];
     }
 }

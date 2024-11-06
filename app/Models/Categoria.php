@@ -23,9 +23,9 @@ class Categoria extends Model
             $params = [];
 
             if ($search) {
-                $sql .= " WHERE nome LIKE :searchName OR slug LIKE :searchSlug";
-                $params[':searchName'] = '%' . $search . '%';
-                $params[':searchSlug'] = '%' . $search . '%';
+                $sql .= " WHERE nome LIKE :nome OR slug LIKE :slug";
+                $params[':nome'] = '%' . $search . '%';
+                $params[':slug'] = '%' . $search . '%';
             }
 
             $sql .= " ORDER BY nome ASC";
@@ -85,8 +85,9 @@ class Categoria extends Model
             $params = [];
 
             if ($search) {
-                $sql .= " WHERE nome LIKE :search OR slug LIKE :search";
-                $params[':search'] = '%' . $search . '%';
+                $sql .= " WHERE nome LIKE :nome OR slug LIKE :slug";
+                $params[':nome'] = '%' . $search . '%';
+                $params[':slug'] = '%' . $search . '%';
             }
 
             $stmt = $this->pdo->prepare($sql);

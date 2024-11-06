@@ -19,7 +19,7 @@ if (empty($_SESSION['csrf_token'])) {
     <div class="col-md-6">
         <nav aria-label="breadcrumb" class="d-flex justify-content-end">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="/"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="/admin/dashboard"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
                 <li class="breadcrumb-item"><a href="/admin/categorias/index">Categorias</a></li>
                 <li class="breadcrumb-item active" aria-current="page">Editar</li>
             </ol>

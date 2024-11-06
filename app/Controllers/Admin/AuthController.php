@@ -33,7 +33,7 @@ class AuthController extends Controller
                 $accessLog = new AccessLog();
                 $accessLog->registerLogin();
 
-                header('Location: /admin');
+                header('Location: /admin/dashboard');
                 exit();
             } else {
                 $_SESSION['error_message'] = "Usuário ou senha inválidos.";

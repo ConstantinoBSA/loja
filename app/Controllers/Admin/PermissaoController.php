@@ -46,9 +46,9 @@ class PermissaoController extends Controller
 
     public function create()
     {
-        if (!$this->hasPermission('gerenciar_usuario')) {
-            abort('403', 'Você não tem acesso a está área do sistema');
-        }
+        // if (!$this->hasPermission('gerenciar_usuario')) {
+        //     abort('403', 'Você não tem acesso a está área do sistema');
+        // }
 
         $errors = $_SESSION['errors'] ?? [];
         $oldData = $_SESSION['old_data'] ?? [];
@@ -74,8 +74,8 @@ class PermissaoController extends Controller
 
             $rules = [
                 'nome' => 'required|unique:permissoes',
-                'slug' => 'required',
-                'status' => 'required'
+                'label' => 'required|unique:permissoes',
+                'descricao' => 'required'
             ];
 
             $errors = $this->validator->validate($sanitizedData, $rules);
@@ -86,14 +86,14 @@ class PermissaoController extends Controller
                 $this->redirect('/admin/permissoes/adicionar');
             } else {
                 try {
-                    $permissao = $this->permissaoModel->create($sanitizedData['nome'], $sanitizedData['slug'], $sanitizedData['status']);
+                    $permissao = $this->permissaoModel->create($sanitizedData['nome'], $sanitizedData['label'], $sanitizedData['descricao']);
                     if ($permissao) {
                         $this->redirectToWithMessage('/admin/permissoes/index', 'Registro adicionado com sucesso!', 'success');
                     } else {
-                        $this->redirectToWithMessage('/admin/permissoes/adicionar', 'Erro ao adicionar permissao. Por favor, tente novamente!', 'error');
+                        $this->redirectToWithMessage('/admin/permissoes/adicionar', 'Erro ao adicionar permissão. Por favor, tente novamente!', 'error');
                     }
                 } catch (\Exception $e) {
-                    $this->handleException($e, 'Erro ao adicionar a permissao.');
+                    $this->handleException($e, 'Erro ao adicionar a permissão.');
                 }
             }
         }
@@ -104,7 +104,7 @@ class PermissaoController extends Controller
         try {
             $permissao = $this->permissaoModel->getById($id);
             if (!$permissao) {
-                throw new \Exception('Permissao não encontrada.', 404);
+                throw new \Exception('Permissão não encontrada.', 404);
             }
 
             $errors = $_SESSION['errors'] ?? [];
@@ -140,8 +140,8 @@ class PermissaoController extends Controller
 
             $rules = [
                 'nome' => "required|unique:permissoes,nome,{$id}",
-                'slug' => 'required',
-                'status' => 'required'
+                'label' => "required|unique:permissoes,label,{$id}",
+                'descricao' => 'required'
             ];
 
             $errors = $this->validator->validate($sanitizedData, $rules);
@@ -152,7 +152,7 @@ class PermissaoController extends Controller
                 $this->redirect('/admin/permissoes/editar/' . $id);
             } else {
                 try {
-                    $permissao = $this->permissaoModel->update($id, $sanitizedData['nome'], $sanitizedData['slug'], $sanitizedData['status']);
+                    $permissao = $this->permissaoModel->update($id, $sanitizedData['nome'], $sanitizedData['label'], $sanitizedData['descricao']);
                     if ($permissao) {
                         $this->redirectToWithMessage('/admin/permissoes/index', 'Registro editado com sucesso!', 'success');
                     } else {
@@ -205,8 +205,8 @@ class PermissaoController extends Controller
     {
         return [
             'nome' => $this->sanitizer->sanitizeString($data['nome']),
-            'slug' => $this->sanitizer->sanitizeString($data['slug']),
-            'status' => $this->sanitizer->sanitizeString($data['status']),
+            'label' => $this->sanitizer->sanitizeString($data['label']),
+            'descricao' => $this->sanitizer->sanitizeString($data['descricao']),
         ];
     }
 }
