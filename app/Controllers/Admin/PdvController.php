@@ -8,6 +8,13 @@ use App\Models\Pdv;
 
 class PdvController extends Controller
 {
+    public function __construct()
+    {
+        if (!$this->hasPermission('pdv')) {
+            abort('403', 'Você não tem acesso a está área do sistema');
+        }
+    }
+    
     public function index()
     {
         $this->view('admin/pdv/index');

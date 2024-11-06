@@ -3,12 +3,19 @@
 namespace App\Models;
 
 use App\Core\Model;
-use Swift_Mailer;
-use Swift_Message;
-use Swift_SmtpTransport;
+use PDO;
+use PDOException;
 
 class Usuario extends Model
 {
+    private $table_name = "usuarios";
+
+    public $id;
+    public $name;
+    public $email;
+    public $status;
+    public $perfis;
+
     public function getByEmail($email)
     {
         $stmt = $this->pdo->prepare('SELECT * FROM usuarios WHERE email = ?');
@@ -84,134 +91,164 @@ class Usuario extends Model
         $stmt->execute();
     }
 
+    // Retorna todas as usuarios, com suporte a busca, limite e offset
     public function getAll($search = '', $limit = 10, $offset = 0)
     {
-        $sql = "SELECT * FROM usuarios";
-        $params = [];
-    
-        if ($search) {
-            $sql .= " WHERE name LIKE :search OR email LIKE :search";
-            $params[':search'] = '%' . $search . '%';
-        }
+        try {
+            $sql = "SELECT * FROM " . $this->table_name;
+            $params = [];
 
-        $sql .= " ORDER BY name ASC";
-    
-        $sql .= " LIMIT :limit OFFSET :offset";
-        $params[':limit'] = (int) $limit;
-        $params[':offset'] = (int) $offset;
-    
-        $stmt = $this->pdo->prepare($sql);
-    
-        // Vincula os parâmetros
-        foreach ($params as $key => $value) {
-            $stmt->bindValue($key, $value, is_int($value) ? \PDO::PARAM_INT : \PDO::PARAM_STR);
-        }
-    
-        $stmt->execute();
-        $usuarios = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            if ($search) {
+                $sql .= " WHERE name LIKE :name OR email LIKE :email";
+                $params[':name'] = '%' . $search . '%';
+                $params[':email'] = '%' . $search . '%';
+            }
 
-        // Sanitiza os dados
-        return array_map(function ($usuario) {
-            return [
-                'id' => htmlspecialchars($usuario['id'], ENT_QUOTES, 'UTF-8'),
-                'name' => htmlspecialchars($usuario['name'], ENT_QUOTES, 'UTF-8'),
-                'email' => htmlspecialchars($usuario['email'], ENT_QUOTES, 'UTF-8'),
-                'status' => htmlspecialchars($usuario['status'], ENT_QUOTES, 'UTF-8'),
-            ];
-        }, $usuarios);
+            $sql .= " ORDER BY name ASC";
+            $sql .= " LIMIT " . (int) $limit . " OFFSET " . (int) $offset;
+
+            $stmt = $this->pdo->prepare($sql);
+
+            foreach ($params as $key => $value) {
+                $stmt->bindValue($key, $value, \PDO::PARAM_STR);
+            }
+
+            $stmt->execute();
+            $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+
+            foreach ($rows as $key => &$row) {
+                $rows[$key]['perfis'] = $this->getRolesByUser($row['id']);
+            }
+
+            // Transformar cada linha em um objeto Usuario
+            return array_map([$this, 'mapRowToModel'], $rows);
+        } catch (PDOException $e) {
+            // Log the error message
+            error_log($e->getMessage());
+            return [];
+        }
     }
 
+    public function getRolesByUser($userId) {
+        $stmt = $this->pdo->prepare("SELECT nome FROM perfis 
+            JOIN perfil_usuario ON perfis.id = perfil_usuario.perfil_id
+            WHERE perfil_usuario.usuario_id = ?");
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
+    }
+
+    // Mapeia a linha do banco de dados para o objeto Usuario
+    protected function mapRowToModel(array $row)
+    {
+        $model = new self();
+        $model->id = htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8');
+        $model->name = htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');
+        $model->email = htmlspecialchars($row['email'], ENT_QUOTES, 'UTF-8');
+        $model->status = htmlspecialchars($row['status'], ENT_QUOTES, 'UTF-8');
+        $model->perfis = $row['perfis'] ?? [];
+        return $model;
+    }
+
+    // Retorna a contagem de usuarios
     public function countUsuarios($search = '')
     {
-        $sql = "SELECT COUNT(*) FROM usuarios";
-        $params = [];
+        try {
+            $sql = "SELECT COUNT(*) FROM " . $this->table_name;
+            $params = [];
 
-        if ($search) {
-            $sql .= " WHERE name LIKE :search OR email LIKE :search";
-            $params[':search'] = '%' . $search . '%';
+            if ($search) {
+                $sql .= " WHERE name LIKE :name OR email LIKE :email";
+                $params[':name'] = '%' . $search . '%';
+                $params[':email'] = '%' . $search . '%';
+            }
+
+            $stmt = $this->pdo->prepare($sql);
+
+            foreach ($params as $key => $value) {
+                $stmt->bindValue($key, $value, PDO::PARAM_STR);
+            }
+
+            $stmt->execute();
+            return $stmt->fetchColumn();
+        } catch (PDOException $e) {
+            // Log the error message
+            error_log($e->getMessage());
+            return 0;
         }
+    }
 
-        $stmt = $this->pdo->prepare($sql);
+    // Retorna a contagem de usuarios
+    public function getPerfis()
+    {
+        try {
+            $sql = "SELECT id, nome, label FROM perfis";
+            $stmt = $this->pdo->prepare($sql);
 
-        if (!empty($params)) {
-            $stmt->bindValue(':search', $params[':search'], \PDO::PARAM_STR);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // Log the error message
+            error_log($e->getMessage());
+            return 0;
         }
-
-        $stmt->execute();
-        return $stmt->fetchColumn();
     }
 
-    public function findEmailVerificationByToken($token)
-    {
-        $sql = "SELECT email FROM email_verifications WHERE token = :token LIMIT 1";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':token', $token, \PDO::PARAM_STR);
-        $stmt->execute();
-        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
-        return $result ? $result['email'] : false;
-    }
-
-    public function verifyUserEmail($email)
-    {
-        $sql = "UPDATE usuarios SET email_verified_at = NOW() WHERE email = :email";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':email', $email, \PDO::PARAM_STR);
-        $stmt->execute();
-    }
-
-    public function invalidateVerificationToken($token)
-    {
-        $sql = "DELETE FROM email_verifications WHERE token = :token";
-        $stmt = $this->pdo->prepare($sql);
-        $stmt->bindParam(':token', $token, \PDO::PARAM_STR);
-        $stmt->execute();
-    }
-
+    // Busca uma perfil por ID
     public function getById($id)
     {
-        $stmt = $this->pdo->prepare('SELECT * FROM usuarios WHERE id = ?');
-        $stmt->execute([$id]);
-        return $stmt->fetch(\PDO::FETCH_ASSOC);
+        try {
+            $stmt = $this->pdo->prepare('SELECT * FROM ' . $this->table_name . ' WHERE id = ?');
+            $stmt->execute([$id]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $row['perfis'] = $this->getRolesByUser($row['id']);
+
+            return $row ? $this->mapRowToModel($row) : null;
+        } catch (PDOException $e) {
+            // Log the error message
+            error_log($e->getMessage());
+            return null;
+        }
     }
 
+    // Cria uma nova perfil
     public function create($name, $email, $status)
     {
-        $password = password_hash(generateSixDigitPassword(), PASSWORD_BCRYPT);
+        try {
+            $password = password_hash(generateSixDigitPassword(), PASSWORD_BCRYPT);
 
-        $stmt = $this->pdo->prepare('INSERT INTO usuarios (name, email, password, status) VALUES (?, ?, ?, ?)');
-        // Execute a inserção
-        $stmt->execute([$name, $email, $password, $status]);
-
-        // Obtenha o ID do último registro inserido
-        $lastInsertId = $this->pdo->lastInsertId();
-
-        // Recupere o registro completo
-        $stmt = $this->pdo->prepare('SELECT * FROM usuarios WHERE id = ?');
-        $stmt->execute([$lastInsertId]);
-
-        // Retorne o registro como um array associativo
-        return $stmt->fetch(\PDO::FETCH_ASSOC);
+            $stmt = $this->pdo->prepare('INSERT INTO ' . $this->table_name . ' (name, email, password status) VALUES (?, ?, ?, ?)');
+            return $stmt->execute([$name, $email, $password, $status]);
+        } catch (PDOException $e) {
+            // Log the error message
+            error_log($e->getMessage());
+            return false;
+        }
     }
 
-    public function update($id, $email)
+    // Atualiza uma perfil existente
+    public function update($id, $name, $email, $status)
     {
-        // Prepare a instrução de atualização
-        $stmt = $this->pdo->prepare('UPDATE usuarios SET email = ? WHERE id = ?');
-        
-        // Execute a atualização
-        $stmt->execute([$email, $id]);
-
-        // Recupere o registro atualizado
-        $stmt = $this->pdo->prepare('SELECT * FROM usuarios WHERE id = ?');
-        $stmt->execute([$id]);
-
-        // Retorne o registro atualizado como um array associativo
-        return $stmt->fetch(\PDO::FETCH_ASSOC);
+        try {
+            $stmt = $this->pdo->prepare('UPDATE ' . $this->table_name . ' SET name = ?, email = ?, status = ? WHERE id = ?');
+            return $stmt->execute([$name, $email, $status, $id]);
+        } catch (PDOException $e) {
+            // Log the error message
+            error_log($e->getMessage());
+            return false;
+        }
     }
 
+    // Deleta uma perfil
     public function delete($id)
     {
-        $stmt = $this->pdo->prepare('DELETE FROM usuarios WHERE id = ?');
-        return $stmt->execute([$id]);
+        try {
+            $stmt = $this->pdo->prepare('DELETE FROM ' . $this->table_name . ' WHERE id = ?');
+            return $stmt->execute([$id]);
+        } catch (PDOException $e) {
+            // Log the error message
+            error_log($e->getMessage());
+            return false;
+        }
     }
 }

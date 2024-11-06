@@ -14,6 +14,7 @@ class Permissao extends Model
     public $nome;
     public $label;
     public $descricao;
+    public $agrupamento;
 
     // Retorna todas as permissoes, com suporte a busca, limite e offset
     public function getAll($search = '', $limit = 10, $offset = 0)
@@ -23,9 +24,10 @@ class Permissao extends Model
             $params = [];
 
             if ($search) {
-                $sql .= " WHERE nome LIKE :nome OR label LIKE :label";
+                $sql .= " WHERE nome LIKE :nome OR label LIKE :label OR agrupamento LIKE :agrupamento";
                 $params[':nome'] = '%' . $search . '%';
                 $params[':label'] = '%' . $search . '%';
+                $params[':agrupamento'] = '%' . $search . '%';
             }
 
             $sql .= " ORDER BY nome ASC";
@@ -57,6 +59,7 @@ class Permissao extends Model
         $model->nome = htmlspecialchars($row['nome'], ENT_QUOTES, 'UTF-8');
         $model->label = htmlspecialchars($row['label'], ENT_QUOTES, 'UTF-8');
         $model->descricao = htmlspecialchars($row['descricao'], ENT_QUOTES, 'UTF-8');
+        $model->agrupamento = $row['agrupamento'] != null ? htmlspecialchars($row['agrupamento'], ENT_QUOTES, 'UTF-8') : '';
         return $model;
     }
 
@@ -68,9 +71,10 @@ class Permissao extends Model
             $params = [];
 
             if ($search) {
-                $sql .= " WHERE nome LIKE :nome OR label LIKE :label";
+                $sql .= " WHERE nome LIKE :nome OR label LIKE :label OR agrupamento LIKE :agrupamento";
                 $params[':nome'] = '%' . $search . '%';
                 $params[':label'] = '%' . $search . '%';
+                $params[':agrupamento'] = '%' . $search . '%';
             }
 
             $stmt = $this->pdo->prepare($sql);
@@ -105,11 +109,11 @@ class Permissao extends Model
     }
 
     // Cria uma nova permissao
-    public function create($nome, $label, $descricao)
+    public function create($nome, $label, $descricao, $agrupamento)
     {
         try {
-            $stmt = $this->pdo->prepare('INSERT INTO ' . $this->table_name . ' (nome, label, descricao) VALUES (?, ?, ?)');
-            return $stmt->execute([$nome, $label, $descricao]);
+            $stmt = $this->pdo->prepare('INSERT INTO ' . $this->table_name . ' (nome, label, descricao, agrupamento) VALUES (?, ?, ?, ?)');
+            return $stmt->execute([$nome, $label, $descricao, $agrupamento]);
         } catch (PDOException $e) {
             // Log the error message
             error_log($e->getMessage());
@@ -118,11 +122,11 @@ class Permissao extends Model
     }
 
     // Atualiza uma permissao existente
-    public function update($id, $nome, $label, $descricao)
+    public function update($id, $nome, $label, $descricao, $agrupamento)
     {
         try {
-            $stmt = $this->pdo->prepare('UPDATE ' . $this->table_name . ' SET nome = ?, label = ?, descricao = ? WHERE id = ?');
-            return $stmt->execute([$nome, $label, $descricao, $id]);
+            $stmt = $this->pdo->prepare('UPDATE ' . $this->table_name . ' SET nome = ?, label = ?, descricao = ?, agrupamento = ? WHERE id = ?');
+            return $stmt->execute([$nome, $label, $descricao, $agrupamento, $id]);
         } catch (PDOException $e) {
             // Log the error message
             error_log($e->getMessage());

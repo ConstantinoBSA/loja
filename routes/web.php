@@ -75,6 +75,7 @@ $router->addRoute('GET', 'admin/perfis/editar/{id}', [PerfilController::class, '
 $router->addRoute('POST', 'admin/perfis/update/{id}', [PerfilController::class, 'update'], true);
 $router->addRoute('GET', 'admin/perfis/exibir/{id}', [PerfilController::class, 'show'], true);
 $router->addRoute('GET', 'admin/perfis/delete/{id}', [PerfilController::class, 'delete'], true);
+$router->addRoute('POST', 'admin/perfis/permissoes', [PerfilController::class, 'permissoes'], true);
 
 // Usuários
 $router->addRoute('GET', 'admin/usuarios/index', [UsuarioController::class, 'index'], true);
@@ -84,6 +85,7 @@ $router->addRoute('GET', 'admin/usuarios/editar/{id}', [UsuarioController::class
 $router->addRoute('POST', 'admin/usuarios/update/{id}', [UsuarioController::class, 'update'], true);
 $router->addRoute('GET', 'admin/usuarios/exibir/{id}', [UsuarioController::class, 'show'], true);
 $router->addRoute('GET', 'admin/usuarios/delete/{id}', [UsuarioController::class, 'delete'], true);
+$router->addRoute('POST', 'admin/usuarios/perfis', [UsuarioController::class, 'perfis'], true);
 
 // Categorias
 $router->addRoute('GET', 'admin/categorias/index', [CategoriaController::class, 'index'], true);
@@ -147,8 +149,10 @@ $router->addRoute('GET', 'admin/consultas/impressao', [ConsultaController::class
 $router->addRoute('GET', 'admin/relatorios/vendas', [RelatorioController::class, 'mensal'], true);
 $router->addRoute('GET', 'admin/relatorios/impressao', [RelatorioController::class, 'impressao'], true);
 
+$router->addRoute('POST', 'admin/configuracoes/salvar', [HomeController::class, 'salvarConfiguracoes'], true);
+
 // PDV
-$router->addRoute('GET', 'admin/pdv', [PdvController::class, 'index'], true);
+$router->addRoute('GET', 'admin/pdv/index', [PdvController::class, 'index'], true);
 $router->addRoute('GET', 'admin/pdv/tela', [PdvController::class, 'tela'], true);
 $router->addRoute('GET', 'admin/pdv/search_products', [PdvController::class, 'search_products'], true);
 $router->addRoute('GET', 'admin/pdv/addRoute-product', [PdvController::class, 'addRouteProduct'], true);

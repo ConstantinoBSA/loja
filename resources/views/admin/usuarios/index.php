@@ -3,56 +3,127 @@ Teste
 <?php endSection(); ?>
 
 <?php startSection('content'); ?>
-<h2>Lista de Usuários</h2>
-
-<div class="row">
+<div class="row mb-2">
     <div class="col-md-6">
-        <a class="btn btn-success" href="/usuarios/adicionar"><i class="fa fa-plus fa-fw"></i> Criar Novo Usuário</a>
+        <h4 class="titulo-pagina">
+            <span><i class="fa fa-list fa-fw"></i> Usuários</span>
+            <small>Listagem de usuários</small>
+        </h4>
     </div>
     <div class="col-md-6">
-        <form method="GET" action="/usuarios/index">
+        <nav aria-label="breadcrumb" class="d-flex justify-content-end">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/admin/dashboard"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Usuários</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row mt-3">
+    <div class="col-md-6">
+        <a class="btn btn-success" href="/admin/usuarios/adicionar"><i class="fa fa-plus fa-fw"></i> Criar Novo Usuário</a>
+    </div>
+    <div class="col-md-6">
+        <form method="GET" action="/admin/usuarios/index">
             <div class="input-group">
-                <input type="text" name="search" class="form-control" placeholder="Pesquisar usuários por título ou descrição..." value="<?php echo htmlspecialchars($_GET['search'] ?? '', ENT_QUOTES); ?>">
-                <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Pesquisar</button>
-            </div>
-            <div class="text-end">
-                <a href="/usuarios/index"><small>Limpar Pesquisa</small></a>
+                <input type="text" name="search" class="form-control" placeholder="Pesquisar..." value="<?php echo htmlspecialchars($_GET['search'] ?? '', ENT_QUOTES); ?>">
+                <button class="btn btn-outline-secondary" type="submit" id="button-addon2"><i class="fa fa-search"></i></button>
             </div>
         </form>
     </div>
 </div>
 
-<table class="table">
+<table class="table table-striped table-bordered table-sm mt-4">
     <thead>
-        <th width="70" class="text-center">ID</th>
-        <th>Nome</th>
-        <th>E-mail</th>
-        <th>Status</th>
-        <th width="130" class="text-center">Ações</th>
+        <tr>
+            <th width="100" class="text-center">Status</th>
+            <th width="50" class="text-center">ID</th>
+            <th>Nome</th>
+            <th>E-mail</th>
+            <th width="140" class="text-center">Ações</th>
+        </tr>
     </thead>
     <tbody>
-    <?php if (empty($data['usuarios'])): ?>
+    <?php if (empty($usuarios)): ?>
     <tr>
         <td colspan="5" class="text-center">Nenhum registro encontrado.</td>
     </tr>
         <?php else: ?>
-            <?php foreach ($data['usuarios'] as $usuario): ?>
+            <?php foreach ($usuarios as $usuario): ?>
                 <tr>
-                    <td class="text-center"><?php echo $usuario['id']; ?></td>
-                    <td><?php echo $usuario['name']; ?></td>
-                    <td><?php echo $usuario['email']; ?></td>
-                    <td>
-                        <?php if ($usuario['status'] == 'pendente'): ?>
-                            <span class="badge bg-danger">Pendente</span>
+                    <td class="text-center">
+                        <?php if ($usuario->status): ?>
+                            <span class="badge bg-success">Ativo</span>
                         <?php else: ?>
-                            <span class="badge bg-success">Concluído</span>
+                            <span class="badge bg-danger">Inativo</span>
                         <?php endif; ?>
                     </td>
+                    <td class="text-center"><?php echo $usuario->id; ?></td>
+                    <td><?php echo $usuario->name; ?></td>
+                    <td><?php echo $usuario->email; ?></td>
                     <td class="text-center">
-                        <a class="btn btn-warning btn-sm" href="/usuarios/editar/<?php echo $usuario['id']; ?>"><i class="fa fa-pencil"></i></a>
-                        <a class="btn btn-danger btn-sm" href="/usuarios/delete/<?php echo $usuario['id']; ?>"><i class="fa fa-trash"></i></a>
+                        <a class="btn btn-table text-secondary" href="/admin/usuarios/exibir/<?php echo $usuario->id; ?>" title="Exibir"><i class="fa fa-eye"></i></a>
+                        <a class="btn btn-table text-warning" href="/admin/usuarios/editar/<?php echo $usuario->id; ?>" title="Editar"><i class="fa fa-pen-to-square"></i></a>
+                        <button type="button" class="btn btn-table text-danger" data-bs-toggle="modal" data-bs-target="#modalDelete<?php echo $usuario->id; ?>" title="Deletar"><i class="fa fa-trash"></i></button>
+                        <button type="button" class="btn btn-table text-success" data-bs-toggle="modal" data-bs-target="#modalPerfis<?php echo $usuario->id; ?>" title="Perfis"><i class="fa fa-lock"></i></button>
                     </td>
                 </tr>
+
+                <!-- Modal -->
+                <div class="modal fade" id="modalDelete<?php echo $usuario->id; ?>" tabindex="-1" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalDeleteLabel">Confirmação de exclusão</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h6>Você deseja deletar este registro?</h6>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+                                <a href="/admin/usuarios/delete/<?php echo $usuario->id; ?>" class="btn btn-primary">Sim</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Perfis -->
+                <div class="modal fade" id="modalPerfis<?php echo $usuario->id; ?>" tabindex="-1" aria-labelledby="modalPerfisLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalPerfisLabel">Usuario: <?php echo $usuario->name; ?></h5>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="marcar-todos-<?php echo $usuario->id; ?>">
+                                    <label class="form-check-label me-4" for="marcar-todos-<?php echo $usuario->id; ?>">
+                                        Marcar todos
+                                    </label>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                            </div>
+                            <div class="modal-body py-4">
+                                <h6><b>- Perfis</b></h6>
+                                <div class="row ms-1">
+                                    <?php foreach ($perfis as $row): ?>
+                                    <div class="col-md-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input permission-checkbox" type="checkbox" value="<?php echo $row['nome']; ?>" id="<?php echo $usuario->id; ?><?php echo $row['id']; ?>" name="perfis[]" <?php echo in_array($row['nome'], $usuario->perfis) ? 'checked' : ''; ?>>
+                                            <label class="form-check-label" for="<?php echo $usuario->id; ?><?php echo $row['id']; ?>">
+                                                <?php echo $row['label']; ?>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <?php endforeach; ?>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             <?php endforeach; ?>
         <?php endif; ?>
     </tbody>
@@ -88,6 +159,48 @@ Teste
         <?php endif; ?>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+     // Ao mudar o estado do checkbox "Marcar todos"
+     $('[id^=marcar-todos-]').change(function() {
+        var usuarioId = $(this).attr('id').replace('marcar-todos-', '');
+        var isChecked = $(this).is(':checked');
+        
+        // Marca ou desmarca todos os checkboxes de permissão dentro da mesma modal
+        $('#modalPerfis' + usuarioId + ' .permission-checkbox').prop('checked', isChecked).change();
+    });
+    
+    // Manter a funcionalidade AJAX existente
+    $('.permission-checkbox').change(function() {
+        var isChecked = $(this).is(':checked');
+        var perfis = $(this).val();
+        var usuarioId = $(this).closest('.modal').attr('id').replace('modalPerfis', '');
+
+        $.ajax({
+            url: '/admin/usuarios/perfis',
+            method: 'POST',
+            data: {
+                perfis: perfis,
+                usuario_id: usuarioId,
+                status: isChecked ? 'grant' : 'revoke'
+            },
+            dataType: 'json', // Especifica que a resposta deve ser JSON
+            success: function(response) {
+                if (response && response.message) {
+                    console.log(response.message);
+                } else {
+                    console.error('Resposta inesperada:', response);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Erro ao salvar permissão:', xhr.responseText || error);
+            }
+        });
+    });
+});
+</script>
 <?php endSection(); ?>
 
 <?php extend('layouts/admin'); ?>

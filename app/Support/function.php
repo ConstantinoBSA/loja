@@ -50,28 +50,34 @@ function hasProfile($profileName) {
 }
 
 function hasPermission($permissionName) {
-    $pdo = Database::getInstance()->getConnection();
-    $query = "SELECT COUNT(*) FROM permissoes 
-        JOIN permissao_perfil ON permissoes.id = permissao_perfil.permissao_id
-        JOIN perfil_usuario ON permissao_perfil.perfil_id = perfil_usuario.perfil_id
-        WHERE perfil_usuario.usuario_id = ? AND permissoes.nome = ?";
-    $stmt = $pdo->prepare($query);
-    $stmt->execute([auth()->user()->id, $permissionName]);
-    $result = $stmt->fetchColumn();
-    
-    if ($result > 0) {
+    if(hasProfile('administrador')){
         return true;
-    }
+    }else{
+        $pdo = Database::getInstance()->getConnection();
+        $query = "SELECT COUNT(*) FROM permissoes 
+            JOIN permissao_perfil ON permissoes.id = permissao_perfil.permissao_id
+            JOIN perfil_usuario ON permissao_perfil.perfil_id = perfil_usuario.perfil_id
+            WHERE perfil_usuario.usuario_id = ? AND permissoes.nome = ?";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute([auth()->user()->id, $permissionName]);
+        $result = $stmt->fetchColumn();
+        
+        if ($result > 0) {
+            return true;
+        }
 
-    // Verifique permissões diretas atribuídas ao usuário
-    $query = "SELECT COUNT(*) FROM permissoes 
-        JOIN permissao_usuario ON permissoes.id = permissao_usuario.permissao_id
-        WHERE permissao_usuario.usuario_id = ? AND permissoes.nome = ?";
-    $stmt = $pdo->prepare($query);
-    $stmt->execute([auth()->user()->id, $permissionName]);
-    $result = $stmt->fetchColumn();
+        // Verifique permissões diretas atribuídas ao usuário
+            $query = "SELECT COUNT(*) FROM permissoes 
+            JOIN permissao_usuario ON permissoes.id = permissao_usuario.permissao_id
+            WHERE permissao_usuario.usuario_id = ? AND permissoes.nome = ?";
+        $stmt = $pdo->prepare($query);
+        $stmt->execute([auth()->user()->id, $permissionName]);
+        $result = $stmt->fetchColumn();
 
-    return $result > 0;
+        if ($result > 0) {
+            return true;
+        }
+    }  
 }
 
 function abort($code, $mensagem)

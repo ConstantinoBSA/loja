@@ -51,12 +51,22 @@ if (empty($_SESSION['csrf_token'])) {
         </div>
     </div>
 
-    <div class="row mb-4">
-    <label for="descricao" class="col-sm-3 col-form-label text-end text-muted">Descrição: <span class="requerido"></span></label>
+    <div class="row mb-3">
+        <label for="descricao" class="col-sm-3 col-form-label text-end text-muted">Descrição: <span class="requerido"></span></label>
         <div class="col-sm-7">
             <input type="text" class="form-control" id="descricao" name="descricao" value="<?php echo htmlspecialchars($data['descricao'] ?? ''); ?>">
             <?php if (!empty($errors['descricao'])): ?>
                 <p class="error"><?php echo htmlspecialchars($errors['descricao']); ?></p>
+            <?php endif; ?>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <label for="agrupamento" class="col-sm-3 col-form-label text-end text-muted">Agrupamento:</label>
+        <div class="col-sm-7">
+            <input type="text" class="form-control" id="agrupamento" name="agrupamento" value="<?php echo htmlspecialchars($data['agrupamento'] ?? ''); ?>">
+            <?php if (!empty($errors['agrupamento'])): ?>
+                <p class="error"><?php echo htmlspecialchars($errors['agrupamento']); ?></p>
             <?php endif; ?>
         </div>
     </div>

@@ -39,24 +39,55 @@
     <div class="main-content">
         <nav class="sidebar">
             <ul class="nav flex-column">
+                <?php if (hasPermission('dashboard')): ?>
                 <li class="nav-item"><a class="nav-link <?= isActiveSection('dashboard') ?> ps-0" href="/admin/dashboard"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a></li>
+                <?php endif; ?>
                 <li class="nav-header"><i class="fa fa-plus fa-fw"></i> Cadastros</li>
+                <?php if (hasPermission('categorias')): ?>
                 <li class="nav-item"><a class="nav-link <?= isActiveSection('categorias') ?>" href="/admin/categorias/index">- Categorias</a></li>
+                <?php endif; ?>
+                <?php if (hasPermission('formas_pagamento')): ?>
                 <li class="nav-item"><a class="nav-link <?= isActiveSection('formas_pagamento') ?>" href="/admin/formas_pagamento/index">- Formas de Pagamento</a></li>
+                <?php endif; ?>
                 <li class="nav-header"><i class="fa fa-plus fa-fw"></i> Gerenciamento</li>
+                <?php if (hasPermission('clientes')): ?>
                 <li class="nav-item"><a class="nav-link <?= isActiveSection('clientes') ?>" href="/admin/clientes/index">- Clientes</a></li>
+                <?php endif; ?>
+                <?php if (hasPermission('produtos')): ?>
                 <li class="nav-item"><a class="nav-link <?= isActiveSection('produtos') ?>" href="/admin/produtos/index">- Produtos</a></li>
+                <?php endif; ?>
+                <?php if (hasPermission('kits')): ?>
                 <li class="nav-item"><a class="nav-link <?= isActiveSection('kits') ?>" href="/admin/kits/index">- Kits</a></li>
+                <?php endif; ?>
+                <?php if (hasPermission('vendas')): ?>
                 <li class="nav-item"><a class="nav-link <?= isActiveSection('vendas') ?>" href="/admin/vendas/index">- Vendas</a></li>
+                <?php endif; ?>
+                <?php if (hasPermission('pdv')): ?>
+                <li class="nav-item"><a class="nav-link <?= isActiveSection('pdv') ?>" href="/admin/pdv/index" target="_blank">- PDV</a></li>
+                <?php endif; ?>
                 <li class="nav-header"><i class="fa fa-plus fa-fw"></i> Site</li>
+                <?php if (hasPermission('contatos')): ?>
                 <li class="nav-item"><a class="nav-link <?= isActiveSection('contatos') ?>" href="/admin/contatos/index">- Contatos</a></li>
+                <?php endif; ?>
+                <?php if (hasPermission('inscricoes')): ?>
                 <li class="nav-item"><a class="nav-link <?= isActiveSection('inscricoes') ?>" href="/admin/inscricoes/index">- Inscrições</a></li>
+                <?php endif; ?>
                 <li class="nav-header"><i class="fa fa-plus fa-fw"></i> Sistema</li>
+                <?php if (hasPermission('permissoes')): ?>
                 <li class="nav-item"><a class="nav-link <?= isActiveSection('permissoes') ?>" href="/admin/permissoes/index">- Permissões</a></li>
+                <?php endif; ?>
+                <?php if (hasPermission('perfis')): ?>
                 <li class="nav-item"><a class="nav-link <?= isActiveSection('perfis') ?>" href="/admin/perfis/index">- Perfis</a></li>
+                <?php endif; ?>
+                <?php if (hasPermission('usuarios')): ?>
                 <li class="nav-item"><a class="nav-link <?= isActiveSection('usuarios') ?>" href="/admin/usuarios/index">- Usuários</a></li>
+                <?php endif; ?>
+                <?php if (hasPermission('consultas')): ?>
                 <li class="nav-item mt-4"><a class="nav-link <?= isActiveSection('consultas') ?> ps-0" href="/admin/consultas/vendas"><i class="fa fa-search fa-fw"></i> Consultas</a></li>
+                <?php endif; ?>
+                <?php if (hasPermission('relatorios')): ?>
                 <li class="nav-item mt-1"><a class="nav-link <?= isActiveSection('relatorios') ?> ps-0" href="/admin/relatorios/vendas"><i class="fa fa-print fa-fw"></i> Relatórios</a></li>
+                <?php endif; ?>
             </ul>
         </nav>
 

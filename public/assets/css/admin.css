@@ -107,7 +107,7 @@ table tbody tr:last-child td {
 }
 
 .nav-item .nav-link {
-    padding: .2rem 1rem;
+    padding: .15rem 1rem;
     color: rgba(0, 0, 0, 0.5);
     font-weight: 600;
 }

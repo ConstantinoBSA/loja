@@ -90,32 +90,37 @@ Teste
                             <div class="modal-header">
                                 <h5 class="modal-title" id="modalPermissoesLabel">Perfil: <?php echo $perfil->label; ?></h5>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                    <label class="form-check-label" for="flexCheckDefault">
+                                    <input class="form-check-input" type="checkbox" value="" id="marcar-todos-<?php echo $perfil->id; ?>">
+                                    <label class="form-check-label me-4" for="marcar-todos-<?php echo $perfil->id; ?>">
                                         Marcar todos
                                     </label>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                             </div>
-                            <div class="modal-body py-4">
-                                <h6><b>Você deseja deletar este registro?</b></h6>
-                                <div class="row ms-1">
-                                    <div class="col-md-3">
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-                                            <label class="form-check-label" for="flexCheckDefault">
-                                                Marcar todos
-                                            </label>
-                                        </div>
+                            <div class="modal-body">
+                                <?php foreach ($permissoesAgrupadas as $grupo => $permissoes): ?>
+                                    <h6 class="mt-3"><b>- <?php echo htmlspecialchars($grupo, ENT_QUOTES, 'UTF-8'); ?></b></h6>
+                                    <div class="row ms-1">
+                                        <?php foreach ($permissoes as $permissao): ?>
+                                            <div class="col-md-3">
+                                                <div class="form-check">
+                                                    <input class="form-check-input permission-checkbox"
+                                                        type="checkbox"
+                                                        value="<?php echo htmlspecialchars($permissao['nome'], ENT_QUOTES, 'UTF-8'); ?>"
+                                                        id="permissao_<?php echo $perfil->id; ?><?php echo htmlspecialchars($permissao['id'], ENT_QUOTES, 'UTF-8'); ?>"
+                                                        name="permissoes[]"
+                                                        <?php echo in_array($permissao['nome'], $perfil->permissoes) ? 'checked' : ''; ?>>
+                                                    <label class="form-check-label" for="permissao_<?php echo $perfil->id; ?><?php echo htmlspecialchars($permissao['id'], ENT_QUOTES, 'UTF-8'); ?>">
+                                                        <?php echo htmlspecialchars($permissao['label'], ENT_QUOTES, 'UTF-8'); ?>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        <?php endforeach; ?>
                                     </div>
-                                    <div class="col-md-3"></div>
-                                    <div class="col-md-3"></div>
-                                    <div class="col-md-3"></div>
-                                </div>
+                                <?php endforeach; ?>
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-                                <a href="/admin/perfis/delete/<?php echo $perfil->id; ?>" class="btn btn-primary">Sim</a>
                             </div>
                         </div>
                     </div>
@@ -155,6 +160,48 @@ Teste
         <?php endif; ?>
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+     // Ao mudar o estado do checkbox "Marcar todos"
+     $('[id^=marcar-todos-]').change(function() {
+        var perfilId = $(this).attr('id').replace('marcar-todos-', '');
+        var isChecked = $(this).is(':checked');
+        
+        // Marca ou desmarca todos os checkboxes de permissão dentro da mesma modal
+        $('#modalPermissoes' + perfilId + ' .permission-checkbox').prop('checked', isChecked).change();
+    });
+    
+    // Manter a funcionalidade AJAX existente
+    $('.permission-checkbox').change(function() {
+        var isChecked = $(this).is(':checked');
+        var permissoes = $(this).val();
+        var perfilId = $(this).closest('.modal').attr('id').replace('modalPermissoes', '');
+
+        $.ajax({
+            url: '/admin/perfis/permissoes',
+            method: 'POST',
+            data: {
+                permissoes: permissoes,
+                perfil_id: perfilId,
+                status: isChecked ? 'grant' : 'revoke'
+            },
+            dataType: 'json', // Especifica que a resposta deve ser JSON
+            success: function(response) {
+                if (response && response.message) {
+                    console.log(response.message);
+                } else {
+                    console.error('Resposta inesperada:', response);
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Erro ao salvar permissão:', xhr.responseText || error);
+            }
+        });
+    });
+});
+</script>
 <?php endSection(); ?>
 
 <?php extend('layouts/admin'); ?>

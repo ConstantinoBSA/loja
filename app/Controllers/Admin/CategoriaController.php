@@ -13,6 +13,10 @@ class CategoriaController extends Controller
     {
         parent::__construct();
         $this->categoriaModel = new Categoria();
+
+        if (!$this->hasPermission('categorias')) {
+            abort('403', 'Você não tem acesso a está área do sistema');
+        }
     }
 
     public function index()
@@ -46,10 +50,6 @@ class CategoriaController extends Controller
 
     public function create()
     {
-        // if (!$this->hasPermission( 'gerenciar_usuario')) {
-        //     abort('403', 'Você não tem acesso a está área do sistema');
-        // }
-
         $errors = $_SESSION['errors'] ?? [];
         $oldData = $_SESSION['old_data'] ?? [];
 

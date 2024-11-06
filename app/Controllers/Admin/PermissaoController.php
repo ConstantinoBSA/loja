@@ -13,6 +13,10 @@ class PermissaoController extends Controller
     {
         parent::__construct();
         $this->permissaoModel = new Permissao();
+        
+        if (!$this->hasPermission('permissoes')) {
+            abort('403', 'Você não tem acesso a está área do sistema');
+        }
     }
 
     public function index()
@@ -86,7 +90,7 @@ class PermissaoController extends Controller
                 $this->redirect('/admin/permissoes/adicionar');
             } else {
                 try {
-                    $permissao = $this->permissaoModel->create($sanitizedData['nome'], $sanitizedData['label'], $sanitizedData['descricao']);
+                    $permissao = $this->permissaoModel->create($sanitizedData['nome'], $sanitizedData['label'], $sanitizedData['descricao'], $sanitizedData['agrupamento']);
                     if ($permissao) {
                         $this->redirectToWithMessage('/admin/permissoes/index', 'Registro adicionado com sucesso!', 'success');
                     } else {
@@ -152,7 +156,7 @@ class PermissaoController extends Controller
                 $this->redirect('/admin/permissoes/editar/' . $id);
             } else {
                 try {
-                    $permissao = $this->permissaoModel->update($id, $sanitizedData['nome'], $sanitizedData['label'], $sanitizedData['descricao']);
+                    $permissao = $this->permissaoModel->update($id, $sanitizedData['nome'], $sanitizedData['label'], $sanitizedData['descricao'], $sanitizedData['agrupamento']);
                     if ($permissao) {
                         $this->redirectToWithMessage('/admin/permissoes/index', 'Registro editado com sucesso!', 'success');
                     } else {
@@ -207,6 +211,7 @@ class PermissaoController extends Controller
             'nome' => $this->sanitizer->sanitizeString($data['nome']),
             'label' => $this->sanitizer->sanitizeString($data['label']),
             'descricao' => $this->sanitizer->sanitizeString($data['descricao']),
+            'agrupamento' => $this->sanitizer->sanitizeString($data['agrupamento']),
         ];
     }
 }

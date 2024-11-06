@@ -3,6 +3,7 @@
 namespace App\Controllers\Admin;
 
 use App\Core\Controller;
+use App\Core\Database;
 use App\Models\Perfil;
 
 class PerfilController extends Controller
@@ -13,6 +14,10 @@ class PerfilController extends Controller
     {
         parent::__construct();
         $this->perfilModel = new Perfil();
+        
+        if (!$this->hasPermission('perfis')) {
+            abort('403', 'Você não tem acesso a está área do sistema');
+        }
     }
 
     public function index()
@@ -30,8 +35,21 @@ class PerfilController extends Controller
             $start = $offset + 1;
             $end = min($offset + $limit, $totalPerfis);
 
+            $permissoes = $this->perfilModel->getPermissoes();
+
+            $permissoesAgrupadas = [];
+            foreach ($permissoes as $row) {
+                $agrupamento = $row['agrupamento'] ?: 'Sem Grupo';  // Use 'Outros' para permissões sem agrupamento
+                if (!isset($permissoesAgrupadas[$agrupamento])) {
+                    $permissoesAgrupadas[$agrupamento] = [];
+                }
+                $permissoesAgrupadas[$agrupamento][] = $row;
+            }
+
             $this->view('admin/perfis/index', [
                 'perfis' => $perfis,
+                'permissoes' => $permissoes,
+                'permissoesAgrupadas' => $permissoesAgrupadas,
                 'totalPages' => $totalPages,
                 'currentPage' => $page,
                 'totalPerfis' => $totalPerfis,
@@ -208,5 +226,47 @@ class PerfilController extends Controller
             'label' => $this->sanitizer->sanitizeString($data['label']),
             'descricao' => $this->sanitizer->sanitizeString($data['descricao']),
         ];
+    }
+
+    public function permissoes()
+    {
+        $pdo = Database::getInstance()->getConnection();
+        // Para corresponder aos dados enviados via AJAX
+        $permissionName = $_POST['permissoes'] ?? null;
+        $perfilId = $_POST['perfil_id'] ?? null;
+        $status = $_POST['status'] ?? null;
+
+        if (!$permissionName || !$perfilId || !$status) {
+            echo json_encode(['message' => 'Dados inválidos.']);
+            return;
+        }
+
+        try {
+            if ($status === 'grant') {
+                // Conceder permissão
+                $permissionId = $this->getPermissionIdByName($permissionName, $pdo);
+                $stmt = $pdo->prepare("INSERT IGNORE INTO permissao_perfil (perfil_id, permissao_id) VALUES (?, ?)");
+                $stmt->execute([$perfilId, $permissionId]);
+
+                echo json_encode(['message' => 'Permissão concedida.']);
+            } else {
+                // Revogar permissão
+                $permissionId = $this->getPermissionIdByName($permissionName, $pdo);
+                $stmt = $pdo->prepare("DELETE FROM permissao_perfil WHERE perfil_id = ? AND permissao_id = ?");
+                $stmt->execute([$perfilId, $permissionId]);
+
+                echo json_encode(['message' => 'Permissão revogada.']);
+            }
+        } catch (\PDOException $e) {
+            error_log($e->getMessage());
+            echo json_encode(['message' => 'Erro ao alterar permissão.']);
+        }
+    }
+
+    private function getPermissionIdByName($permissionName, $pdo)
+    {
+        $stmt = $pdo->prepare("SELECT id FROM permissoes WHERE nome = ?");
+        $stmt->execute([$permissionName]);
+        return $stmt->fetchColumn();
     }
 }

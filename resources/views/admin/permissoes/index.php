@@ -41,6 +41,7 @@ Teste
             <th>Nome</th>
             <th>Label</th>
             <th>Descrição</th>
+            <th>Agrupamento</th>
             <th width="140" class="text-center">Ações</th>
         </tr>
     </thead>
@@ -56,11 +57,11 @@ Teste
                     <td><?php echo $permissao->nome; ?></td>
                     <td><?php echo $permissao->label; ?></td>
                     <td><?php echo $permissao->descricao; ?></td>
+                    <td><?php echo $permissao->agrupamento != null ? $permissao->agrupamento : 'Sem Grupo'; ?></td>
                     <td class="text-center">
                         <a class="btn btn-table text-secondary" href="/admin/permissoes/exibir/<?php echo $permissao->id; ?>" title="Exibir"><i class="fa fa-eye"></i></a>
                         <a class="btn btn-table text-warning" href="/admin/permissoes/editar/<?php echo $permissao->id; ?>" title="Editar"><i class="fa fa-pen-to-square"></i></a>
                         <button type="button" class="btn btn-table text-danger" data-bs-toggle="modal" data-bs-target="#modalDelete<?php echo $permissao->id; ?>" title="Deletar"><i class="fa fa-trash"></i></button>
-                        <a class="btn btn-table text-primary" href="/admin/permissoes/exibir/<?php echo $permissao->id; ?>" title="Status"><i class="fa fa-check-to-slot"></i></a>
                     </td>
                 </tr>
 

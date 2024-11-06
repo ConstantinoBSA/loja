@@ -41,7 +41,7 @@ function isActive($linkPattern, $currentPath)
             <li class="<?php echo isActive('promocoes', $currentPath); ?>"><a href="/promocoes" class="nav-link px-2 link-dark">Promoções</a></li>
             <li class="<?php echo isActive('destaques', $currentPath); ?>"><a href="/destaques" class="nav-link px-2 link-dark">Destaques</a></li>
             <li class="<?php echo isActive('contato', $currentPath); ?>"><a href="/contato" class="nav-link px-2 link-dark">Contato</a></li>
-            <li><a href="/admin" class="nav-link px-2 link-dark">Admin</a></li>
+            <li><a href="/admin/dashboard" class="nav-link px-2 link-dark">Admin</a></li>
         </ul>
     </header>
 

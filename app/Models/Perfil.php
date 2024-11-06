@@ -14,6 +14,7 @@ class Perfil extends Model
     public $nome;
     public $label;
     public $descricao;
+    public $permissoes;
 
     // Retorna todas as perfis, com suporte a busca, limite e offset
     public function getAll($search = '', $limit = 10, $offset = 0)
@@ -40,6 +41,10 @@ class Perfil extends Model
             $stmt->execute();
             $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
+            foreach ($rows as $key => &$row) {
+                $rows[$key]['permissoes'] = $this->getPermissionsByProfile($row['id']);
+            }
+
             // Transformar cada linha em um objeto Perfil
             return array_map([$this, 'mapRowToModel'], $rows);
         } catch (PDOException $e) {
@@ -47,6 +52,14 @@ class Perfil extends Model
             error_log($e->getMessage());
             return [];
         }
+    }
+
+    public function getPermissionsByProfile($perfilId) {
+        $stmt = $this->pdo->prepare("SELECT nome FROM permissoes 
+            JOIN permissao_perfil ON permissoes.id = permissao_perfil.permissao_id
+            WHERE permissao_perfil.perfil_id = ?");
+        $stmt->execute([$perfilId]);
+        return $stmt->fetchAll(PDO::FETCH_COLUMN);
     }
 
     // Mapeia a linha do banco de dados para o objeto Perfil
@@ -57,6 +70,7 @@ class Perfil extends Model
         $model->nome = htmlspecialchars($row['nome'], ENT_QUOTES, 'UTF-8');
         $model->label = htmlspecialchars($row['label'], ENT_QUOTES, 'UTF-8');
         $model->descricao = htmlspecialchars($row['descricao'], ENT_QUOTES, 'UTF-8');
+        $model->permissoes = $row['permissoes'] ?? [];
         return $model;
     }
 
@@ -88,6 +102,21 @@ class Perfil extends Model
         }
     }
 
+    public function getPermissoes()
+    {
+        try {
+            $sql = "SELECT id, nome, label, agrupamento FROM permissoes";
+            $stmt = $this->pdo->prepare($sql);
+
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            // Log the error message
+            error_log($e->getMessage());
+            return 0;
+        }
+    }
+
     // Busca uma perfil por ID
     public function getById($id)
     {
@@ -95,6 +124,8 @@ class Perfil extends Model
             $stmt = $this->pdo->prepare('SELECT * FROM ' . $this->table_name . ' WHERE id = ?');
             $stmt->execute([$id]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $row['permissoes'] = $this->getPermissionsByProfile($row['id']);
 
             return $row ? $this->mapRowToModel($row) : null;
         } catch (PDOException $e) {

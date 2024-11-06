@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS email_verifications;
 DROP TABLE IF EXISTS audit_logs;
 DROP TABLE IF EXISTS access_logs;
 DROP TABLE IF EXISTS usuarios;
+DROP TABLE IF EXISTS configuracoes;
 DROP TABLE IF EXISTS kits_produtos;
 DROP TABLE IF EXISTS kits;
 DROP TABLE IF EXISTS produtos;
@@ -75,7 +76,8 @@ CREATE TABLE permissoes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     nome VARCHAR(255) UNIQUE NOT NULL,
     label VARCHAR(255) UNIQUE NOT NULL,
-    descricao VARCHAR(255)
+    descricao VARCHAR(255),
+    agrupamento VARCHAR(255)
 );
 
 CREATE TABLE perfil_usuario (
@@ -100,6 +102,13 @@ CREATE TABLE permissao_usuario (
     PRIMARY KEY (usuario_id, permissao_id),
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,
     FOREIGN KEY (permissao_id) REFERENCES permissoes(id) ON DELETE CASCADE
+);
+
+CREATE TABLE configuracoes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    chave VARCHAR(255) UNIQUE NOT NULL,
+    valor TEXT,
+    descricao VARCHAR(255)
 );
 
 -- Tabela de Categorias
@@ -290,10 +299,18 @@ INSERT INTO perfis (nome, label, descricao) VALUES
 ('editor', 'Editor', 'Pode editar conteúdos'),
 ('visualizador', 'Visualizador', 'Pode visualizar conteúdos');
 
-INSERT INTO permissoes (nome, label, descricao) VALUES
-('gerenciar_usuarios', 'Gerenciar Usuários', 'Pode adicionar, editar e remover usuários'),
-('editar_conteudo', 'Editar Conteúdo', 'Pode editar qualquer conteúdo'),
-('visualizar_relatorios', 'Visualizar Relatórios', 'Pode acessar relatórios do sistema');
+INSERT INTO permissoes (nome, label, descricao, agrupamento) VALUES
+('dashboard', 'Dashboard', 'Pode adicionar, editar e remover usuários', null),
+('categorias', 'Categorias', 'Pode editar qualquer conteúdo', 'Cadastros'),
+('formas_pagamento', 'Formas de Pagamento', 'Pode acessar relatórios do sistema', 'Cadastros'),
+('clientes', 'Clientes', 'Pode acessar relatórios do sistema', 'Gerenciamentos'),
+('produtos', 'Produtos', 'Pode acessar relatórios do sistema', 'Gerenciamentos'),
+('kits', 'Kits', 'Pode acessar relatórios do sistema', 'Gerenciamentos'),
+('vendas', 'Vendas', 'Pode acessar relatórios do sistema', 'Gerenciamentos'),
+('pdv', 'PDV', 'Pode acessar relatórios do sistema', 'Gerenciamentos'),
+('permissoes', 'Permissões', 'Pode acessar relatórios do sistema', 'Sistema'),
+('perfis', 'Perfis', 'Pode acessar relatórios do sistema', 'Sistema'),
+('usuarios', 'Usuários', 'Pode acessar relatórios do sistema', 'Sistema');
 
 INSERT INTO perfil_usuario (usuario_id, perfil_id) VALUES
 (1, 1), -- Usuário 1 tem perfil de Administrador
@@ -302,11 +319,26 @@ INSERT INTO perfil_usuario (usuario_id, perfil_id) VALUES
 (3, 2); -- Usuário 3 também tem perfil de Editor
 
 INSERT INTO permissao_perfil (perfil_id, permissao_id) VALUES
-(1, 1), -- Administrador pode gerenciar usuários
-(1, 2), -- Administrador pode editar conteúdo
-(1, 3), -- Administrador pode visualizar relatórios
-(2, 2), -- Editor pode editar conteúdo
-(3, 3); -- Visualizador pode visualizar relatórios
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(1, 6),
+(1, 7),
+(1, 8),
+(1, 9),
+(1, 10),
+(1, 11);
 
 INSERT INTO permissao_usuario (usuario_id, permissao_id) VALUES
 (2, 3); -- Usuário 2 tem permissão específica para visualizar relatórios, além do seu perfil
+
+INSERT INTO configuracoes (chave, valor, descricao) VALUES
+('site_name', 'Meu Site', 'O nome do site exibido na barra de título.'),
+('maintenance_mode', '0', 'Ativa ou desativa o modo de manutenção.'),
+('items_per_page', '10', 'Número de itens exibidos por página em listas.'),
+('contact_email', 'contato@meusite.com', 'Endereço de email de contato principal.'),
+('timezone', 'America/Sao_Paulo', 'Fuso horário padrão do sistema.'),
+('enable_signups', '1', 'Permitir novos registros de usuários.'),
+('currency', 'BRL', 'Moeda padrão para transações.');

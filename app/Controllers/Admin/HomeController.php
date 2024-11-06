@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Core\Controller;
 use App\Models\Categoria;
+use App\Models\Configuracao;
 use App\Models\Dashboard;
 use App\Models\Kit;
 use App\Models\Produto;
@@ -11,6 +12,13 @@ use App\Models\Venda;
 
 class HomeController extends Controller
 {
+    protected $configModel;
+
+    public function __construct()
+    {
+        $this->configModel = new Configuracao();
+    }
+
     public function index()
     {
         $venda = new Venda();
@@ -23,7 +31,7 @@ class HomeController extends Controller
         $total_produtos = $produto->countProdutos();
 
         $categoria = new Categoria();
-        $total_categorias = $categoria->countCategorias();
+        $total_categorias = $categoria->countCategorias();        
 
         // Obter dados para o ano atual
         $anoAtual = date('Y');
@@ -55,6 +63,24 @@ class HomeController extends Controller
 
     public function configuracoes()
     {
-        $this->view('admin/configuracoes');
+        $configuracoes = $this->configModel->getAllConfiguracoes();
+
+        $this->view('admin/configuracoes', [
+            'configuracoes' => $configuracoes
+        ]);
+    }
+
+    public function salvarConfiguracoes()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['config'])) {
+            $configs = $_POST['config'];
+            foreach ($configs as $chave => $valor) {
+                $this->configModel->updateConfiguracao($chave, $valor);
+            }            
+        }
+
+        // Redirecionar ou mostrar mensagem de sucesso
+        header('Location: /admin/configuracoes');
+        exit();
     }
 }
