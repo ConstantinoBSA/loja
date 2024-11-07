@@ -39,38 +39,42 @@ Teste
         <tr>
             <th width="100" class="text-center">Status</th>
             <th width="50" class="text-center">ID</th>
+            <th>Código</th>
             <th>Nome</th>
             <th>Slug</th>
+            <th>Categoria</th>
             <th width="140" class="text-center">Ações</th>
         </tr>
     </thead>
     <tbody>
-    <?php if (empty($data['produtos'])): ?>
+    <?php if (empty($produtos)): ?>
     <tr>
         <td colspan="5" class="text-center">Nenhum registro encontrado.</td>
     </tr>
         <?php else: ?>
-            <?php foreach ($data['produtos'] as $produto): ?>
+            <?php foreach ($produtos as $produto): ?>
                 <tr>
                     <td class="text-center">
-                        <?php if ($produto['status'] == 'pendente'): ?>
+                        <?php if ($produto->status == 'pendente'): ?>
                             <span class="badge bg-danger">Pendente</span>
                         <?php else: ?>
                             <span class="badge bg-success">Concluído</span>
                         <?php endif; ?>
                     </td>
-                    <td class="text-center"><?php echo $produto['id']; ?></td>
-                    <td><?php echo $produto['nome']; ?></td>
-                    <td><?php echo $produto['slug']; ?></td>
+                    <td class="text-center"><?php echo $produto->id; ?></td>
+                    <td><?php echo $produto->codigo; ?></td>
+                    <td><?php echo $produto->nome; ?></td>
+                    <td><?php echo $produto->slug; ?></td>
+                    <td><?php echo $produto->categoria()->nome; ?></td>
                     <td class="text-center">
-                        <a class="btn btn-secondary btn-sm" href="/admin/produtos/exibir/<?php echo $produto['id']; ?>"><i class="fa fa-eye"></i></a>
-                        <a class="btn btn-warning btn-sm" href="/admin/produtos/editar/<?php echo $produto['id']; ?>"><i class="fa fa-pencil"></i></a>
-                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalDelete<?php echo $produto['id']; ?>"><i class="fa fa-trash"></i></button>
+                        <a class="btn btn-secondary btn-sm" href="/admin/produtos/exibir/<?php echo $produto->id; ?>"><i class="fa fa-eye"></i></a>
+                        <a class="btn btn-warning btn-sm" href="/admin/produtos/editar/<?php echo $produto->id; ?>"><i class="fa fa-pencil"></i></a>
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalDelete<?php echo $produto->id; ?>"><i class="fa fa-trash"></i></button>
                     </td>
                 </tr>
 
                 <!-- Modal -->
-                <div class="modal fade" id="modalDelete<?php echo $produto['id']; ?>" tabindex="-1" aria-labelledby="modalDeleteLabel" aria-hidden="true">
+                <div class="modal fade" id="modalDelete<?php echo $produto->id; ?>" tabindex="-1" aria-labelledby="modalDeleteLabel" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -82,7 +86,7 @@ Teste
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
-                                <a href="/admin/produtos/delete/<?php echo $produto['id']; ?>" class="btn btn-primary">Sim</a>
+                                <a href="/admin/produtos/delete/<?php echo $produto->id; ?>" class="btn btn-primary">Sim</a>
                             </div>
                         </div>
                     </div>
@@ -92,36 +96,7 @@ Teste
     </tbody>
 </table>
 
-<div class="row">
-    <div class="col-md-4">
-        Mostrando de <?php echo $start; ?> até <?php echo $end; ?> de <?php echo $totalProdutos; ?> registros
-    </div>
-    <div class="col-md-8">
-        <?php if ($totalPages > 1): ?>
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-end">
-                    <li class="page-item <?php echo $currentPage == 1 ? 'disabled' : ''; ?>">
-                    <a class="page-link" href="?page=<?php echo $currentPage - 1; ?>&search=<?php echo htmlspecialchars($search, ENT_QUOTES); ?>" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                    </li>
-                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                    <li class="page-item <?php echo $i == $currentPage ? 'active' : ''; ?>">
-                        <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo htmlspecialchars($search, ENT_QUOTES); ?>">
-                        <?php echo $i; ?>
-                        </a>
-                    </li>
-                    <?php endfor; ?>
-                    <li class="page-item <?php echo $currentPage == $totalPages ? 'disabled' : ''; ?>">
-                    <a class="page-link" href="?page=<?php echo $currentPage + 1; ?>&search=<?php echo htmlspecialchars($search, ENT_QUOTES); ?>" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                    </li>
-                </ul>
-            </nav>
-        <?php endif; ?>
-    </div>
-</div>
+<?php $produtos->pagination($_GET['search'] ?? ''); ?>
 <?php endSection(); ?>
 
 <?php extend('layouts/admin'); ?>

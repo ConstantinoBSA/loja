@@ -8,7 +8,7 @@
 body {
     font-family: "DM Sans", sans-serif;
     display: flex;
-    min-height: calc(100vh - 62px)!important;
+    min-height: 100vh;
     flex-direction: column;
     color: #444 !important;
 }

@@ -50,8 +50,7 @@ class Controller
 
     protected function handleException($exception, $userMessage, $redirectLocation = '/')
     {
-        error_log($exception->getMessage());
-        $this->redirectToWithMessage($redirectLocation, $userMessage, 'error');
+        $this->renderErrorPage($exception->getMessage(), $exception);
     }
 
     protected function hasProfile($profileName)
@@ -62,5 +61,14 @@ class Controller
     protected function hasPermission($permissionName)
     {
         return hasPermission($permissionName);
+    }
+
+    // Função para renderizar a view de erro
+    private function renderErrorPage($title, $message)
+    {
+        $errorTitle = $title;
+        $errorMessage = $message;
+        include __DIR__.'/../../resources/views/errors/default.php';
+        exit();
     }
 }

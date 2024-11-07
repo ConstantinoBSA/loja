@@ -22,48 +22,49 @@ class CategoriaController extends Controller
 
     public function index()
     {
-        // try {
-            $perPage = 15; // Número de registros por página
-            $currentPage = 1; // Página atual a partir de uma query string
+        try {
+            $perPage = 10; // Número de registros por página
+            $currentPage = $this->request->get('page', 1); // Página atual a partir de uma query string
+            $search = $this->request->get('search', '');
 
-            $search = $this->request->all()['search'] ?? '';
-            $page = $this->request->all()['page'] ?? 1;
-            $limit = 10;
-            $offset = ($page - 1) * $limit;
-
-            $categorias = $this->categoriaModel->paginate();
-            $totalCategorias = $this->categoriaModel->count();
-            $totalPages = ceil($totalCategorias / $limit);
-
-            $start = $offset + 1;
-            $end = min($offset + $limit, $totalCategorias);
+            $categorias = $this->categoriaModel
+                ->where('nome', 'LIKE', $search)
+                ->orWhere('slug', 'LIKE', $search)
+                ->orderBy('nome')
+                ->paginate($perPage, $currentPage);
 
             $this->view('admin/categorias/index', [
                 'categorias' => $categorias,
-                'totalPages' => $totalPages,
-                'currentPage' => $page,
-                'totalCategorias' => $totalCategorias,
-                'start' => $start,
-                'end' => $end,
-                'search' => $search
             ]);
-        // } catch (\Exception $e) {
-            // $this->handleException($e, 'Ocorreu um erro ao obter categorias.');
-        // }
+        } catch (\Exception $e) {
+            $this->handleException($e, 'Ocorreu um erro ao obter categorias.');
+        }
     }
 
     public function create()
-    {
-        $errors = $_SESSION['errors'] ?? [];
-        $oldData = $_SESSION['old_data'] ?? [];
+{
+    $errors = $_SESSION['errors'] ?? [];
+    $oldData = $_SESSION['old_data'] ?? [];
 
-        unset($_SESSION['errors'], $_SESSION['old_data']);
+    unset($_SESSION['errors'], $_SESSION['old_data']);
 
-        $this->view('admin/categorias/create', [
-            'errors' => $errors,
-            'data' => $oldData
-        ]);
+    $categoria = $this->categoriaModel;
+
+    if (!empty($oldData)) {
+        foreach ($oldData as $key => $value) {
+            if (property_exists($this->categoriaModel, $key)) {
+                $categoria->$key = $value;
+            }
+        }
     }
+
+    dd($categoria);
+
+    $this->view('admin/categorias/create', [
+        'errors' => $errors,
+        'categoria' => $categoria
+    ]);
+}
 
     public function store()
     {
@@ -89,12 +90,17 @@ class CategoriaController extends Controller
                 $this->redirect('/admin/categorias/adicionar');
             } else {
                 try {
-                    // $categoria = $this->categoriaModel->create($sanitizedData['nome'], $sanitizedData['status']);
-                    // if ($categoria) {
-                    //     $this->redirectToWithMessage('/admin/categorias/index', 'Registro adicionado com sucesso!', 'success');
-                    // } else {
-                    //     $this->redirectToWithMessage('/admin/categorias/adicionar', 'Erro ao adicionar categoria. Por favor, tente novamente!', 'error');
-                    // }
+                    $categoria = $this->categoriaModel->create([
+                        'nome' => $sanitizedData['nome'], 
+                        'slug' => generateSlug($sanitizedData['nome']), 
+                        'status' => $sanitizedData['status']
+                    ]);
+
+                    if ($categoria) {
+                        $this->redirectToWithMessage('/admin/categorias/index', 'Registro adicionado com sucesso!', 'success');
+                    } else {
+                        $this->redirectToWithMessage('/admin/categorias/adicionar', 'Erro ao adicionar categoria. Por favor, tente novamente!', 'error');
+                    }
                 } catch (\Exception $e) {
                     $this->handleException($e, 'Erro ao adicionar a categoria.');
                 }
@@ -154,12 +160,17 @@ class CategoriaController extends Controller
                 $this->redirect('/admin/categorias/editar/' . $id);
             } else {
                 try {
-                    // $categoria = $this->categoriaModel->update($id, $sanitizedData['nome'], $sanitizedData['status']);
-                    // if ($categoria) {
-                    //     $this->redirectToWithMessage('/admin/categorias/index', 'Registro editado com sucesso!', 'success');
-                    // } else {
-                    //     $this->redirectToWithMessage('/admin/categorias/editar/' . $id, 'Erro ao editar categoria. Por favor, tente novamente!', 'error');
-                    // }
+                    $categoria = $this->categoriaModel->update($id, [
+                        'nome' => $sanitizedData['nome'], 
+                        'slug' => generateSlug($sanitizedData['nome']), 
+                        'status' => $sanitizedData['status']
+                    ]);
+                    
+                    if ($categoria) {
+                        $this->redirectToWithMessage('/admin/categorias/index', 'Registro editado com sucesso!', 'success');
+                    } else {
+                        $this->redirectToWithMessage('/admin/categorias/editar/' . $id, 'Erro ao editar categoria. Por favor, tente novamente!', 'error');
+                    }
                 } catch (\Exception $e) {
                     $this->handleException($e, 'Erro ao editar a categoria.');
                 }
@@ -198,7 +209,18 @@ class CategoriaController extends Controller
     public function status($id)
     {
         try {
-            $categoria = $this->categoriaModel->alterarStatus($id);
+            $reg = $this->categoriaModel->find($id);
+            $currentStatus = $reg->status;
+            if ($currentStatus) {
+                $newStatus = 0;
+            }else{
+                $newStatus = 1;
+            }
+
+            $categoria = $this->categoriaModel->update($id, [
+                'status' => $newStatus
+            ]);
+
             if ($categoria) {
                 $this->redirectToWithMessage('/admin/categorias/index', 'Status alterado com sucesso!', 'success');
             } else {

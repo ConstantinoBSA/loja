@@ -34,6 +34,37 @@ Teste
     </div>
 </div>
 
+<div>
+<?php
+// Verifica se a variável é do tipo correto e está populada
+// if ($categorias instanceof App\Core\PaginatedCollection) {
+//     echo "A variável é uma instância de PaginatedCollection.<br>";
+//     var_dump($categorias);
+// } else {
+//     echo "A variável não é uma instância de PaginatedCollection ou está vazia.<br>";
+// }
+
+// if (!empty($categorias)) {
+//     echo "Categorias não está vazia.<br>";
+// } else {
+//     echo "Categorias está vazia.<br>";
+// }
+
+// // Tentar acessar diretamente os itens
+// if (isset($categorias[0])) {
+//     echo "Primeiro item: " . $categorias[0]->nome;
+// } else {
+//     echo "Nenhum item encontrado na coleção.";
+//     exit;
+// }
+
+// foreach ($categorias as $categoria) {
+//     var_dump($categoria); // Isso deve mostrar cada categoria
+//     break; // Pare após a primeira iteração para não poluir a saída
+// }
+?>
+</div>
+
 <table class="table table-striped table-bordered table-sm mt-4">
     <thead>
         <tr>
@@ -45,12 +76,13 @@ Teste
         </tr>
     </thead>
     <tbody>
+   
     <?php if (empty($categorias)): ?>
     <tr>
         <td colspan="5" class="text-center">Nenhum registro encontrado.</td>
     </tr>
         <?php else: ?>
-            <?php foreach ($categorias['data'] as $categoria): ?>
+            <?php foreach ($categorias as $categoria): ?>
                 <tr>
                     <td class="text-center">
                         <?php if ($categoria->status): ?>
@@ -112,36 +144,8 @@ Teste
     </tbody>
 </table>
 
-<!-- <div class="row">
-    <div class="col-md-4">
-        Mostrando de <?php echo $start; ?> até <?php echo $end; ?> de <?php echo $totalCategorias; ?> registros
-    </div>
-    <div class="col-md-8">
-        <?php if ($totalPages > 1): ?>
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-end">
-                    <li class="page-item <?php echo $currentPage == 1 ? 'disabled' : ''; ?>">
-                    <a class="page-link" href="?page=<?php echo $currentPage - 1; ?>&search=<?php echo htmlspecialchars($search, ENT_QUOTES); ?>" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
-                    </li>
-                    <?php for ($i = 1; $i <= $totalPages; $i++): ?>
-                    <li class="page-item <?php echo $i == $currentPage ? 'active' : ''; ?>">
-                        <a class="page-link" href="?page=<?php echo $i; ?>&search=<?php echo htmlspecialchars($search, ENT_QUOTES); ?>">
-                        <?php echo $i; ?>
-                        </a>
-                    </li>
-                    <?php endfor; ?>
-                    <li class="page-item <?php echo $currentPage == $totalPages ? 'disabled' : ''; ?>">
-                    <a class="page-link" href="?page=<?php echo $currentPage + 1; ?>&search=<?php echo htmlspecialchars($search, ENT_QUOTES); ?>" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
-                    </li>
-                </ul>
-            </nav>
-        <?php endif; ?>
-    </div>
-</div> -->
+<?php $categorias->pagination($_GET['search'] ?? ''); ?>
+
 <?php endSection(); ?>
 
 <?php extend('layouts/admin'); ?>

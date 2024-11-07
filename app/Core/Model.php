@@ -55,26 +55,57 @@ class Model
 
     public function where($column, $operator = '=', $value = null, $boolean = 'AND')
     {
+        // Verificar se o valor é nulo e ajustar o operador adequadamente
         if ($value === null) {
             $value = $operator;
             $operator = '=';
         }
 
+        // Validar o operador
         $this->validateOperator($operator);
 
+        // Ajustar para operador LIKE
         if ($operator === 'LIKE') {
             $value = '%' . $value . '%';
         }
 
-        $this->bindings[] = $value;
-        $clause = count($this->bindings) === 1 ? ' WHERE ' : " $boolean ";
-        $this->query .= "$clause $column $operator ?";
+        // Gerar um nome único para o parâmetro (para evitar conflitos)
+        $paramName = ':' . str_replace('.', '_', $column) . count($this->bindings);
+
+        // Adicionar o valor à matriz de bindings
+        $this->bindings[$paramName] = $value;
+
+        // Construção da cláusula WHERE
+        if (empty($this->query) || stripos($this->query, 'WHERE') === false) {
+            $this->query .= " WHERE $column $operator $paramName";
+        } else {
+            $this->query .= " $boolean $column $operator $paramName";
+        }
+
         return $this;
     }
 
     public function orWhere($column, $operator = '=', $value = null)
     {
         return $this->where($column, $operator, $value, 'OR');
+    }
+
+    public function orderBy($column, $direction = 'ASC')
+    {
+        // Validação simples da direção de ordenação
+        $direction = strtoupper($direction);
+        if (!in_array($direction, ['ASC', 'DESC'])) {
+            throw new InvalidArgumentException('O parâmetro de direção deve ser "ASC" ou "DESC".');
+        }
+
+        // Adicionar a cláusula ORDER BY à consulta
+        if (stripos($this->query, 'ORDER BY') === false) {
+            $this->query .= " ORDER BY $column $direction";
+        } else {
+            $this->query .= ", $column $direction";
+        }
+
+        return $this;
     }
 
     public function first()
@@ -131,39 +162,27 @@ class Model
         return $objects;
     }
 
-    public function paginate($perPage = 10, $currentPage = 1)
+    public function paginate($perPage, $currentPage)
     {
-        // Calcular o deslocamento para a paginação
         $offset = ($currentPage - 1) * $perPage;
-
-        // Modifique a consulta para incluir LIMIT e OFFSET
         $paginatedQuery = $this->query . " LIMIT :limit OFFSET :offset";
 
-        // Prepare a consulta
+        // Preparar a consulta de forma segura
         $stmt = $this->pdo->prepare($paginatedQuery);
 
-        // Vincule valores nomeados para LIMIT e OFFSET
-        $stmt->bindValue(':limit', (int)$perPage, PDO::PARAM_INT);
-        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        // Vincular os parâmetros nomeados
+        foreach ($this->bindings as $param => $value) {
+            $stmt->bindValue($param, $value);
+        }
 
-        // Execute a consulta. Se bindings estiver vazio, não há problema.
-        $stmt->execute(); // Remova o $this->bindings se não houver parâmetros a serem vinculados
+        // Vincular os parâmetros de paginação
+        $stmt->bindValue(':limit', $perPage, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', $offset, PDO::PARAM_INT);
 
-        // Obtenha os resultados
+        $stmt->execute();
+
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Query para contar o número total de registros (sem LIMIT e OFFSET)
-        $totalQuery = str_replace("SELECT {$this->selectColumns}", 'SELECT COUNT(*) as total', $this->query);
-        $totalStmt = $this->pdo->prepare($totalQuery);
-        // Execute a consulta para contar o total de registros
-        $totalStmt->execute($this->bindings); // Pode continuar usando $this->bindings aqui se for relevante
-
-        $totalRecords = (int)$totalStmt->fetch(PDO::FETCH_ASSOC)['total'];
-
-        // Calcular o número total de páginas
-        $totalPages = (int)ceil($totalRecords / $perPage);
-
-        // Criar objetos do modelo a partir dos resultados
         $objects = [];
         foreach ($results as $result) {
             $object = new static();
@@ -171,16 +190,14 @@ class Model
             $objects[] = $object;
         }
 
-        // Retornar dados e informações de paginação
-        return [
-            'data' => $objects,
-            'pagination' => [
-                'current_page' => $currentPage,
-                'per_page' => $perPage,
-                'total_records' => $totalRecords,
-                'total_pages' => $totalPages,
-            ],
-        ];
+        $totalRecords = $this->count(); // Assumindo que este método conta todos os registros
+        
+        return new PaginatedCollection($objects, [
+            'current_page' => $currentPage,
+            'per_page' => $perPage,
+            'total_records' => $totalRecords,
+            'total_pages' => ceil($totalRecords / $perPage),
+        ]);
     }
 
     public function count()

@@ -34,7 +34,7 @@ if (empty($_SESSION['csrf_token'])) {
     <div class="row mb-3">
         <label for="nome" class="col-sm-3 col-form-label text-end text-muted">Nome: <span class="requerido"></span></label>
         <div class="col-sm-7">
-            <input type="text" class="form-control" id="nome" name="nome" value="<?php echo htmlspecialchars($data['nome'] ?? ''); ?>">
+            <input type="text" class="form-control" id="nome" name="nome" value="<?php echo htmlspecialchars($categoria->nome ?? ''); ?>">
             <?php if (!empty($errors['nome'])): ?>
                 <p class="error"><?php echo htmlspecialchars($errors['nome']); ?></p>
             <?php endif; ?>
@@ -46,10 +46,10 @@ if (empty($_SESSION['csrf_token'])) {
         <div class="col-sm-7">
             <select name="status" class="form-select" id="status">
                 <option value="">Selecione...</option>
-                <option value="1" <?php if (($data['status'] ?? '') == 1) {
+                <option value="1" <?php if (($categoria->status ?? '') == 1) {
                     echo 'selected';
                 } ?>>Ativo</option>
-                <option value="0" <?php if (($data['status'] ?? '') == 0) {
+                <option value="0" <?php if (($categoria->status ?? '') == 0) {
                     echo 'selected';
                 } ?>>Inativo</option>
             </select>

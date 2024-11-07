@@ -33,7 +33,7 @@
 <body>
     <header class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/"><img src="<?php __DIR__ ?>/assets/images/logo.jpg" alt="LOGO" width="30" class="me-2"><?php echo config()['site_name'] ?? '' ?></a>
+            <a class="navbar-brand" href="/"><img src="<?php __DIR__ ?>/assets/images/favicon/ms-icon-310x310.png" alt="LOGO" width="40" class="me-3"><?php echo config()['site_name'] ?? '' ?></a>
             <form class="d-flex ms-auto">
                 <div class="input-group me-2">
                     <input type="search" class="form-control" placeholder="Procurar" style="width: 450px;">

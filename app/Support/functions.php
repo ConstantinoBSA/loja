@@ -113,3 +113,10 @@ function isRouter($route) {
     return $currentUri === trim($route, '/');
 }
 
+function csrf()
+{
+    if (!empty($_SESSION['csrf_token'])) {
+        $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+        echo '<input type="hidden" name="csrf_token" value="'. htmlspecialchars($_SESSION['csrf_token'] ?? '').'">';
+    }
+}

@@ -2,6 +2,12 @@
 Teste
 <?php endSection(); ?>
 
+<?php
+if (empty($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+?>
+
 <?php startSection('content'); ?>
 <div class="row">
     <div class="col-md-6">
@@ -22,16 +28,16 @@ Teste
 </div>
 <small class="text-muted mb-2">Campo com (*) são obrigatório</small>
 
-<form method="post" action="/admin/produtos/update/<?php echo $data['id']; ?>" class="mt-5">
-    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? ''); ?>">
+<form method="post" action="/admin/produtos/update/<?php echo $produto->id; ?>" class="mt-5">
+    <input type="hidden" name="csrf_token" value="<?php echo htmlspecialchars($_SESSION['csrf_token'] ?? ''); ?>">  
 
     <!-- Nome -->
     <div class="row mb-3">
         <label for="nome" class="col-sm-3 col-form-label text-end text-muted">Nome: <span class="requerido"></span></label>
         <div class="col-sm-7">
-            <input type="text" class="form-control" id="nome" name="nome" value="<?php echo htmlspecialchars($data['nome'] ?? ''); ?>">
-            <?php if (!empty($error['nome'])): ?>
-                <p class="error"><?php echo htmlspecialchars($error['nome']); ?></p>
+            <input type="text" class="form-control" id="nome" name="nome" value="<?php echo htmlspecialchars($produto->nome ?? ''); ?>">
+            <?php if (!empty($errors['nome'])): ?>
+                <p class="error"><?php echo htmlspecialchars($errors['nome']); ?></p>
             <?php endif; ?>
         </div>
     </div>
@@ -40,9 +46,9 @@ Teste
     <div class="row mb-3">
         <label for="descricao" class="col-sm-3 col-form-label text-end text-muted">Descrição: <span class="requerido"></span></label>
         <div class="col-sm-7">
-            <textarea class="form-control" id="descricao" name="descricao" rows="5"><?php echo htmlspecialchars($data['descricao'] ?? ''); ?></textarea>
-            <?php if (!empty($error['descricao'])): ?>
-                <p class="error"><?php echo htmlspecialchars($error['descricao']); ?></p>
+            <textarea class="form-control" id="descricao" name="descricao" rows="5"><?php echo htmlspecialchars($produto->descricao ?? ''); ?></textarea>
+            <?php if (!empty($errors['descricao'])): ?>
+                <p class="error"><?php echo htmlspecialchars($errors['descricao']); ?></p>
             <?php endif; ?>
         </div>
     </div>
@@ -51,9 +57,9 @@ Teste
     <div class="row mb-3">
         <label for="preco" class="col-sm-3 col-form-label text-end text-muted">Preço: <span class="requerido"></span></label>
         <div class="col-sm-7">
-            <input type="text" class="form-control" id="preco" name="preco" value="<?php echo htmlspecialchars($data['preco'] ?? ''); ?>">
-            <?php if (!empty($error['preco'])): ?>
-                <p class="error"><?php echo htmlspecialchars($error['preco']); ?></p>
+            <input type="text" class="form-control" id="preco" name="preco" value="<?php echo htmlspecialchars($produto->preco ?? ''); ?>">
+            <?php if (!empty($errors['preco'])): ?>
+                <p class="error"><?php echo htmlspecialchars($errors['preco']); ?></p>
             <?php endif; ?>
         </div>
     </div>
@@ -62,9 +68,9 @@ Teste
     <div class="row mb-3">
         <label for="preco_promocional" class="col-sm-3 col-form-label text-end text-muted">Preço Promocional: <span class="requerido"></span></label>
         <div class="col-sm-7">
-            <input type="text" class="form-control" id="preco_promocional" name="preco_promocional" value="<?php echo htmlspecialchars($data['preco_promocional'] ?? ''); ?>">
-            <?php if (!empty($error['preco_promocional'])): ?>
-                <p class="error"><?php echo htmlspecialchars($error['preco_promocional']); ?></p>
+            <input type="text" class="form-control" id="preco_promocional" name="preco_promocional" value="<?php echo htmlspecialchars($produto->preco_promocional ?? ''); ?>">
+            <?php if (!empty($errors['preco_promocional'])): ?>
+                <p class="error"><?php echo htmlspecialchars($errors['preco_promocional']); ?></p>
             <?php endif; ?>
         </div>
     </div>
@@ -73,9 +79,9 @@ Teste
     <div class="row mb-3">
         <label for="codigo_barras" class="col-sm-3 col-form-label text-end text-muted">Código de Barras:</label>
         <div class="col-sm-7">
-            <input type="text" class="form-control" id="codigo_barras" name="codigo_barras" value="<?php echo htmlspecialchars($data['codigo_barras'] ?? ''); ?>">
-            <?php if (!empty($error['codigo_barras'])): ?>
-                <p class="error"><?php echo htmlspecialchars($error['codigo_barras']); ?></p>
+            <input type="text" class="form-control" id="codigo_barras" name="codigo_barras" value="<?php echo htmlspecialchars($produto->codigo_barras ?? ''); ?>">
+            <?php if (!empty($errors['codigo_barras'])): ?>
+                <p class="error"><?php echo htmlspecialchars($errors['codigo_barras']); ?></p>
             <?php endif; ?>
         </div>
     </div>
@@ -84,9 +90,9 @@ Teste
     <div class="row mb-3">
         <label for="estoque" class="col-sm-3 col-form-label text-end text-muted">Estoque: <span class="requerido"></span></label>
         <div class="col-sm-7">
-            <input type="number" class="form-control" id="estoque" name="estoque" value="<?php echo htmlspecialchars($data['estoque'] ?? ''); ?>">
-            <?php if (!empty($error['estoque'])): ?>
-                <p class="error"><?php echo htmlspecialchars($error['estoque']); ?></p>
+            <input type="number" class="form-control" id="estoque" name="estoque" value="<?php echo htmlspecialchars($produto->estoque ?? ''); ?>">
+            <?php if (!empty($errors['estoque'])): ?>
+                <p class="error"><?php echo htmlspecialchars($errors['estoque']); ?></p>
             <?php endif; ?>
         </div>
     </div>
@@ -96,8 +102,8 @@ Teste
         <label for="imagem" class="col-sm-3 col-form-label text-end text-muted">Imagem:</label>
         <div class="col-sm-7">
             <input type="file" class="form-control" id="imagem" name="imagem">
-            <?php if (!empty($error['imagem'])): ?>
-                <p class="error"><?php echo htmlspecialchars($error['imagem']); ?></p>
+            <?php if (!empty($errors['imagem'])): ?>
+                <p class="error"><?php echo htmlspecialchars($errors['imagem']); ?></p>
             <?php endif; ?>
         </div>
     </div>
@@ -109,13 +115,13 @@ Teste
             <select class="form-select" id="categoria_id" name="categoria_id">
                 <option value="">Selecione uma categoria</option>
                 <?php foreach ($categorias as $categoria): ?>
-                    <option value="<?php echo $categoria['id']; ?>" <?php echo (($data['categoria_id'] ?? '') == $categoria['id']) ? 'selected' : ''; ?>>
-                        <?php echo htmlspecialchars($categoria['nome']); ?>
+                    <option value="<?php echo $categoria->id; ?>" <?php echo (($produto->categoria_id ?? '') == $categoria->id) ? 'selected' : ''; ?>>
+                        <?php echo htmlspecialchars($categoria->nome); ?>
                     </option>
                 <?php endforeach; ?>
             </select>
-            <?php if (!empty($error['categoria_id'])): ?>
-                <p class="error"><?php echo htmlspecialchars($error['categoria_id']); ?></p>
+            <?php if (!empty($errors['categoria_id'])): ?>
+                <p class="error"><?php echo htmlspecialchars($errors['categoria_id']); ?></p>
             <?php endif; ?>
         </div>
     </div>
@@ -124,9 +130,9 @@ Teste
     <div class="row mb-3">
         <label for="informacoes_relevantes" class="col-sm-3 col-form-label text-end text-muted">Informações Relevantes: <span class="requerido"></span></label>
         <div class="col-sm-7">
-            <textarea class="form-control" id="informacoes_relevantes" name="informacoes_relevantes" rows="15"><?php echo htmlspecialchars($data['informacoes_relevantes'] ?? ''); ?></textarea>
-            <?php if (!empty($error['informacoes_relevantes'])): ?>
-                <p class="error"><?php echo htmlspecialchars($error['informacoes_relevantes']); ?></p>
+            <textarea class="form-control" id="informacoes_relevantes" name="informacoes_relevantes" rows="15"><?php echo htmlspecialchars($produto->informacoes_relevantes ?? ''); ?></textarea>
+            <?php if (!empty($errors['informacoes_relevantes'])): ?>
+                <p class="error"><?php echo htmlspecialchars($errors['informacoes_relevantes']); ?></p>
             <?php endif; ?>
         </div>
     </div>
@@ -135,9 +141,9 @@ Teste
     <div class="row mb-3">
         <label for="data_lancamento" class="col-sm-3 col-form-label text-end text-muted">Data de Lançamento: <span class="requerido"></span></label>
         <div class="col-sm-7">
-            <input type="date" class="form-control" id="data_lancamento" name="data_lancamento" value="<?php echo htmlspecialchars($data['data_lancamento'] ?? ''); ?>">
-            <?php if (!empty($error['data_lancamento'])): ?>
-                <p class="error"><?php echo htmlspecialchars($error['data_lancamento']); ?></p>
+            <input type="date" class="form-control" id="data_lancamento" name="data_lancamento" value="<?php echo htmlspecialchars($produto->data_lancamento ?? ''); ?>">
+            <?php if (!empty($errors['data_lancamento'])): ?>
+                <p class="error"><?php echo htmlspecialchars($errors['data_lancamento']); ?></p>
             <?php endif; ?>
         </div>
     </div>
@@ -146,9 +152,9 @@ Teste
     <div class="row mb-3">
         <label for="pontos" class="col-sm-3 col-form-label text-end text-muted">Pontos: <span class="requerido"></span></label>
         <div class="col-sm-7">
-            <input type="number" class="form-control" id="pontos" name="pontos" value="<?php echo htmlspecialchars($data['pontos'] ?? ''); ?>">
-            <?php if (!empty($error['pontos'])): ?>
-                <p class="error"><?php echo htmlspecialchars($error['pontos']); ?></p>
+            <input type="number" class="form-control" id="pontos" name="pontos" value="<?php echo htmlspecialchars($produto->pontos ?? ''); ?>">
+            <?php if (!empty($errors['pontos'])): ?>
+                <p class="error"><?php echo htmlspecialchars($errors['pontos']); ?></p>
             <?php endif; ?>
         </div>
     </div>
@@ -158,11 +164,11 @@ Teste
         <label for="promocao" class="col-sm-3 col-form-label text-end text-muted">Promoção:</label>
         <div class="col-sm-7">
             <select class="form-select" id="promocao" name="promocao">
-                <option value="0" <?php echo (($data['promocao'] ?? '') === 0) ? 'selected' : ''; ?>>Não</option>
-                <option value="1" <?php echo (($data['promocao'] ?? '') === 1) ? 'selected' : ''; ?>>Sim</option>
+                <option value="0" <?php echo (($produto->promocao ?? '') === 0) ? 'selected' : ''; ?>>Não</option>
+                <option value="1" <?php echo (($produto->promocao ?? '') === 1) ? 'selected' : ''; ?>>Sim</option>
             </select>
-            <?php if (!empty($error['promocao'])): ?>
-                <p class="error"><?php echo htmlspecialchars($error['promocao']); ?></p>
+            <?php if (!empty($errors['promocao'])): ?>
+                <p class="error"><?php echo htmlspecialchars($errors['promocao']); ?></p>
             <?php endif; ?>
         </div>
     </div>
@@ -172,11 +178,11 @@ Teste
         <label for="destaque" class="col-sm-3 col-form-label text-end text-muted">Destaque:</label>
         <div class="col-sm-7">
             <select class="form-select" id="destaque" name="destaque">
-                <option value="0" <?php echo (($data['destaque'] ?? '') === 0) ? 'selected' : ''; ?>>Não</option>
-                <option value="1" <?php echo (($data['destaque'] ?? '') === 1) ? 'selected' : ''; ?>>Sim</option>
+                <option value="0" <?php echo (($produto->destaque ?? '') === 0) ? 'selected' : ''; ?>>Não</option>
+                <option value="1" <?php echo (($produto->destaque ?? '') === 1) ? 'selected' : ''; ?>>Sim</option>
             </select>
-            <?php if (!empty($error['destaque'])): ?>
-                <p class="error"><?php echo htmlspecialchars($error['destaque']); ?></p>
+            <?php if (!empty($errors['destaque'])): ?>
+                <p class="error"><?php echo htmlspecialchars($errors['destaque']); ?></p>
             <?php endif; ?>
         </div>
     </div>
@@ -186,11 +192,11 @@ Teste
         <label for="status" class="col-sm-3 col-form-label text-end text-muted">Status: <span class="requerido"></span></label>
         <div class="col-sm-7">
             <select class="form-select" id="status" name="status">
-                <option value="1" <?php echo (($data['status'] ?? '') === 1) ? 'selected' : ''; ?>>Ativo</option>
-                <option value="0" <?php echo (($data['status'] ?? '') === 0) ? 'selected' : ''; ?>>Inativo</option>
+                <option value="1" <?php echo (($produto->status ?? '') === 1) ? 'selected' : ''; ?>>Ativo</option>
+                <option value="0" <?php echo (($produto->status ?? '') === 0) ? 'selected' : ''; ?>>Inativo</option>
             </select>
-            <?php if (!empty($error['status'])): ?>
-                <p class="error"><?php echo htmlspecialchars($error['status']); ?></p>
+            <?php if (!empty($errors['status'])): ?>
+                <p class="error"><?php echo htmlspecialchars($errors['status']); ?></p>
             <?php endif; ?>
         </div>
     </div>
