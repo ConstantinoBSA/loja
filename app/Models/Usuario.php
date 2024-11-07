@@ -9,6 +9,7 @@ use PDOException;
 class Usuario extends Model
 {
     private $table_name = "usuarios";
+    protected $tableName = 'usuarios';
 
     public $id;
     public $name;
@@ -212,32 +213,32 @@ class Usuario extends Model
     }
 
     // Cria uma nova perfil
-    public function create($name, $email, $status)
-    {
-        try {
-            $password = password_hash(generateSixDigitPassword(), PASSWORD_BCRYPT);
+    // public function create($name, $email, $status)
+    // {
+    //     try {
+    //         $password = password_hash(generateSixDigitPassword(), PASSWORD_BCRYPT);
 
-            $stmt = $this->pdo->prepare('INSERT INTO ' . $this->table_name . ' (name, email, password status) VALUES (?, ?, ?, ?)');
-            return $stmt->execute([$name, $email, $password, $status]);
-        } catch (PDOException $e) {
-            // Log the error message
-            error_log($e->getMessage());
-            return false;
-        }
-    }
+    //         $stmt = $this->pdo->prepare('INSERT INTO ' . $this->table_name . ' (name, email, password status) VALUES (?, ?, ?, ?)');
+    //         return $stmt->execute([$name, $email, $password, $status]);
+    //     } catch (PDOException $e) {
+    //         // Log the error message
+    //         error_log($e->getMessage());
+    //         return false;
+    //     }
+    // }
 
-    // Atualiza uma perfil existente
-    public function update($id, $name, $email, $status)
-    {
-        try {
-            $stmt = $this->pdo->prepare('UPDATE ' . $this->table_name . ' SET name = ?, email = ?, status = ? WHERE id = ?');
-            return $stmt->execute([$name, $email, $status, $id]);
-        } catch (PDOException $e) {
-            // Log the error message
-            error_log($e->getMessage());
-            return false;
-        }
-    }
+    // // Atualiza uma perfil existente
+    // public function update($id, $name, $email, $status)
+    // {
+    //     try {
+    //         $stmt = $this->pdo->prepare('UPDATE ' . $this->table_name . ' SET name = ?, email = ?, status = ? WHERE id = ?');
+    //         return $stmt->execute([$name, $email, $status, $id]);
+    //     } catch (PDOException $e) {
+    //         // Log the error message
+    //         error_log($e->getMessage());
+    //         return false;
+    //     }
+    // }
 
     // Deleta uma perfil
     public function delete($id)

@@ -6,6 +6,8 @@ use App\Core\Model;
 
 class Venda extends Model
 {
+    protected $tableName = 'vendas';
+
     public function getAll($search = '', $limit = 10, $offset = 0)
     {
         $sql = "SELECT 
@@ -105,11 +107,11 @@ class Venda extends Model
         return $stmt->execute([$vendaId, $produtoId, $quantidade, str_replace(['.', ','], ['', '.'], $preco)]);
     }
 
-    public function update($id, $nome, $slug, $status)
-    {
-        $stmt = $this->pdo->prepare('UPDATE vendas SET nome = ?, slug = ?, status = ? WHERE id = ?');
-        return $stmt->execute([$nome, $slug, $status, $id]);
-    }
+    // public function update($id, $nome, $slug, $status)
+    // {
+    //     $stmt = $this->pdo->prepare('UPDATE vendas SET nome = ?, slug = ?, status = ? WHERE id = ?');
+    //     return $stmt->execute([$nome, $slug, $status, $id]);
+    // }
 
     public function delete($id)
     {

@@ -6,6 +6,8 @@ use App\Core\Model;
 
 class Kit extends Model
 {
+    protected $tableName = 'kits';
+
     public function getAll($search = '', $limit = 10, $offset = 0)
     {
         $sql = "SELECT * FROM kits";
@@ -70,17 +72,17 @@ class Kit extends Model
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
-    public function create($nome, $slug, $status)
-    {
-        $stmt = $this->pdo->prepare('INSERT INTO kits (nome, slug, status) VALUES (?, ?, ?)');
-        return $stmt->execute([$nome, $slug, $status]);
-    }
+    // public function create($nome, $slug, $status)
+    // {
+    //     $stmt = $this->pdo->prepare('INSERT INTO kits (nome, slug, status) VALUES (?, ?, ?)');
+    //     return $stmt->execute([$nome, $slug, $status]);
+    // }
 
-    public function update($id, $nome, $slug, $status)
-    {
-        $stmt = $this->pdo->prepare('UPDATE kits SET nome = ?, slug = ?, status = ? WHERE id = ?');
-        return $stmt->execute([$nome, $slug, $status, $id]);
-    }
+    // public function update($id, $nome, $slug, $status)
+    // {
+    //     $stmt = $this->pdo->prepare('UPDATE kits SET nome = ?, slug = ?, status = ? WHERE id = ?');
+    //     return $stmt->execute([$nome, $slug, $status, $id]);
+    // }
 
     public function delete($id)
     {

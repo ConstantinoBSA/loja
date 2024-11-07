@@ -22,16 +22,16 @@ class HomeController extends Controller
     public function index()
     {
         $venda = new Venda();
-        $total_vendas = $venda->countVendas();
+        $total_vendas = $venda->count();
 
         $kit = new Kit();
-        $total_kits = $kit->countKits();
+        $total_kits = $kit->count();
 
         $produto = new Produto();
-        $total_produtos = $produto->countProdutos();
+        $total_produtos = $produto->count();
 
         $categoria = new Categoria();
-        $total_categorias = $categoria->countCategorias();        
+        $total_categorias = $categoria->count();        
 
         // Obter dados para o ano atual
         $anoAtual = date('Y');

@@ -50,7 +50,7 @@ Teste
         <td colspan="5" class="text-center">Nenhum registro encontrado.</td>
     </tr>
         <?php else: ?>
-            <?php foreach ($categorias as $categoria): ?>
+            <?php foreach ($categorias['data'] as $categoria): ?>
                 <tr>
                     <td class="text-center">
                         <?php if ($categoria->status): ?>
@@ -112,7 +112,7 @@ Teste
     </tbody>
 </table>
 
-<div class="row">
+<!-- <div class="row">
     <div class="col-md-4">
         Mostrando de <?php echo $start; ?> até <?php echo $end; ?> de <?php echo $totalCategorias; ?> registros
     </div>
@@ -141,7 +141,7 @@ Teste
             </nav>
         <?php endif; ?>
     </div>
-</div>
+</div> -->
 <?php endSection(); ?>
 
 <?php extend('layouts/admin'); ?>

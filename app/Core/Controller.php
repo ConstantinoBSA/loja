@@ -8,6 +8,7 @@ class Controller
     protected $validator;
     protected $auditLogger;
     protected $request;
+    protected $instances = [];
 
     public function __construct()
     {

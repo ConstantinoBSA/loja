@@ -4,6 +4,7 @@ namespace App\Controllers\Admin;
 
 use App\Core\Controller;
 use App\Models\Categoria;
+use App\Models\Usuario;
 
 class CategoriaController extends Controller
 {
@@ -21,14 +22,17 @@ class CategoriaController extends Controller
 
     public function index()
     {
-        try {
+        // try {
+            $perPage = 15; // Número de registros por página
+            $currentPage = 1; // Página atual a partir de uma query string
+
             $search = $this->request->all()['search'] ?? '';
             $page = $this->request->all()['page'] ?? 1;
             $limit = 10;
             $offset = ($page - 1) * $limit;
 
-            $categorias = $this->categoriaModel->getAll($search, $limit, $offset);
-            $totalCategorias = $this->categoriaModel->countCategorias($search);
+            $categorias = $this->categoriaModel->paginate();
+            $totalCategorias = $this->categoriaModel->count();
             $totalPages = ceil($totalCategorias / $limit);
 
             $start = $offset + 1;
@@ -43,9 +47,9 @@ class CategoriaController extends Controller
                 'end' => $end,
                 'search' => $search
             ]);
-        } catch (\Exception $e) {
-            $this->handleException($e, 'Ocorreu um erro ao obter categorias.');
-        }
+        // } catch (\Exception $e) {
+            // $this->handleException($e, 'Ocorreu um erro ao obter categorias.');
+        // }
     }
 
     public function create()
@@ -85,12 +89,12 @@ class CategoriaController extends Controller
                 $this->redirect('/admin/categorias/adicionar');
             } else {
                 try {
-                    $categoria = $this->categoriaModel->create($sanitizedData['nome'], $sanitizedData['status']);
-                    if ($categoria) {
-                        $this->redirectToWithMessage('/admin/categorias/index', 'Registro adicionado com sucesso!', 'success');
-                    } else {
-                        $this->redirectToWithMessage('/admin/categorias/adicionar', 'Erro ao adicionar categoria. Por favor, tente novamente!', 'error');
-                    }
+                    // $categoria = $this->categoriaModel->create($sanitizedData['nome'], $sanitizedData['status']);
+                    // if ($categoria) {
+                    //     $this->redirectToWithMessage('/admin/categorias/index', 'Registro adicionado com sucesso!', 'success');
+                    // } else {
+                    //     $this->redirectToWithMessage('/admin/categorias/adicionar', 'Erro ao adicionar categoria. Por favor, tente novamente!', 'error');
+                    // }
                 } catch (\Exception $e) {
                     $this->handleException($e, 'Erro ao adicionar a categoria.');
                 }
@@ -101,7 +105,7 @@ class CategoriaController extends Controller
     public function edit($id)
     {
         try {
-            $categoria = $this->categoriaModel->getById($id);
+            $categoria = $this->categoriaModel->find($id);
             if (!$categoria) {
                 throw new \Exception('Categoria não encontrada.', 404);
             }
@@ -150,12 +154,12 @@ class CategoriaController extends Controller
                 $this->redirect('/admin/categorias/editar/' . $id);
             } else {
                 try {
-                    $categoria = $this->categoriaModel->update($id, $sanitizedData['nome'], $sanitizedData['status']);
-                    if ($categoria) {
-                        $this->redirectToWithMessage('/admin/categorias/index', 'Registro editado com sucesso!', 'success');
-                    } else {
-                        $this->redirectToWithMessage('/admin/categorias/editar/' . $id, 'Erro ao editar categoria. Por favor, tente novamente!', 'error');
-                    }
+                    // $categoria = $this->categoriaModel->update($id, $sanitizedData['nome'], $sanitizedData['status']);
+                    // if ($categoria) {
+                    //     $this->redirectToWithMessage('/admin/categorias/index', 'Registro editado com sucesso!', 'success');
+                    // } else {
+                    //     $this->redirectToWithMessage('/admin/categorias/editar/' . $id, 'Erro ao editar categoria. Por favor, tente novamente!', 'error');
+                    // }
                 } catch (\Exception $e) {
                     $this->handleException($e, 'Erro ao editar a categoria.');
                 }
@@ -166,7 +170,7 @@ class CategoriaController extends Controller
     public function show($id)
     {
         try {
-            $categoria = $this->categoriaModel->getById($id);
+            $categoria = $this->categoriaModel->find($id);
             if ($categoria) {
                 $this->view('admin/categorias/show', ['categoria' => $categoria]);
             } else {

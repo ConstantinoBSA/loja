@@ -24,6 +24,7 @@ use App\Controllers\Admin\ConsultaController;
 use App\Controllers\Admin\RelatorioController;
 
 use App\Controllers\Admin\PdvController;
+use App\Controllers\Admin\TesteController;
 
 $router = new Router();
 
@@ -33,6 +34,8 @@ if (isRouter('')) {
     header('Location: /home');
     exit();
 }
+
+$router->addRoute('GET', 'admin/teste', [TesteController::class, 'index']);
 
 // Site
 $router->addRoute('GET', 'home', [IndexController::class, 'index']);

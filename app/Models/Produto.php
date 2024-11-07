@@ -6,6 +6,8 @@ use App\Core\Model;
 
 class Produto extends Model
 {
+    protected $tableName = 'produtos';
+
     public function getAll($search = '', $limit = 10, $offset = 0)
     {
         $sql = "SELECT * FROM produtos";
@@ -92,87 +94,87 @@ class Produto extends Model
         return $stmt->fetch(\PDO::FETCH_ASSOC);
     }
 
-    public function create(
-        $nome,
-        $codigo,
-        $descricao,
-        $preco,
-        $preco_promocional,
-        $codigo_barras,
-        $estoque,
-        $slug,
-        $imagem,
-        $categoria_id,
-        $informacoes_relevantes,
-        $data_lancamento,
-        $pontos,
-        $promocao,
-        $destaque,
-        $status
-    )
-    {
-        $stmt = $this->pdo->prepare('INSERT INTO produtos (nome, codigo, descricao, preco, preco_promocional, codigo_barras, estoque, slug, imagem, categoria_id, informacoes_relevantes, data_lancamento, pontos, promocao, destaque, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-        return $stmt->execute([
-            $nome,
-            $codigo,
-            $descricao,
-            $preco,
-            $preco_promocional,
-            $codigo_barras,
-            $estoque,
-            $slug,
-            $imagem,
-            $categoria_id,
-            $informacoes_relevantes,
-            $data_lancamento,
-            $pontos,
-            $promocao,
-            $destaque,
-            $status
-        ]);
-    }
+    // public function create(
+    //     $nome,
+    //     $codigo,
+    //     $descricao,
+    //     $preco,
+    //     $preco_promocional,
+    //     $codigo_barras,
+    //     $estoque,
+    //     $slug,
+    //     $imagem,
+    //     $categoria_id,
+    //     $informacoes_relevantes,
+    //     $data_lancamento,
+    //     $pontos,
+    //     $promocao,
+    //     $destaque,
+    //     $status
+    // )
+    // {
+    //     $stmt = $this->pdo->prepare('INSERT INTO produtos (nome, codigo, descricao, preco, preco_promocional, codigo_barras, estoque, slug, imagem, categoria_id, informacoes_relevantes, data_lancamento, pontos, promocao, destaque, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+    //     return $stmt->execute([
+    //         $nome,
+    //         $codigo,
+    //         $descricao,
+    //         $preco,
+    //         $preco_promocional,
+    //         $codigo_barras,
+    //         $estoque,
+    //         $slug,
+    //         $imagem,
+    //         $categoria_id,
+    //         $informacoes_relevantes,
+    //         $data_lancamento,
+    //         $pontos,
+    //         $promocao,
+    //         $destaque,
+    //         $status
+    //     ]);
+    // }
 
-    public function update(
-        $id,
-        $nome,
-        $codigo,
-        $descricao,
-        $preco,
-        $preco_promocional,
-        $codigo_barras,
-        $estoque,
-        $slug,
-        $imagem,
-        $categoria_id,
-        $informacoes_relevantes,
-        $data_lancamento,
-        $pontos,
-        $promocao,
-        $destaque,
-        $status
-    )
-    {
-        $stmt = $this->pdo->prepare('UPDATE produtos SET nome = ?, codigo = ?, descricao = ?, preco = ?, preco_promocional = ?, codigo_barras = ?, estoque = ?, slug = ?, imagem = ?, categoria_id = ?, informacoes_relevantes = ?, data_lancamento = ?, pontos = ?, promocao = ?, destaque = ?, status = ? WHERE id = ?');
-        return $stmt->execute([
-            $nome,
-            $codigo,
-            $descricao,
-            $preco,
-            $preco_promocional,
-            $codigo_barras,
-            $estoque,
-            $slug,
-            $imagem,
-            $categoria_id,
-            $informacoes_relevantes,
-            $data_lancamento,
-            $pontos,
-            $promocao,
-            $destaque,
-            $status,
-            $id
-        ]);
-    }
+    // public function update(
+    //     $id,
+    //     $nome,
+    //     $codigo,
+    //     $descricao,
+    //     $preco,
+    //     $preco_promocional,
+    //     $codigo_barras,
+    //     $estoque,
+    //     $slug,
+    //     $imagem,
+    //     $categoria_id,
+    //     $informacoes_relevantes,
+    //     $data_lancamento,
+    //     $pontos,
+    //     $promocao,
+    //     $destaque,
+    //     $status
+    // )
+    // {
+    //     $stmt = $this->pdo->prepare('UPDATE produtos SET nome = ?, codigo = ?, descricao = ?, preco = ?, preco_promocional = ?, codigo_barras = ?, estoque = ?, slug = ?, imagem = ?, categoria_id = ?, informacoes_relevantes = ?, data_lancamento = ?, pontos = ?, promocao = ?, destaque = ?, status = ? WHERE id = ?');
+    //     return $stmt->execute([
+    //         $nome,
+    //         $codigo,
+    //         $descricao,
+    //         $preco,
+    //         $preco_promocional,
+    //         $codigo_barras,
+    //         $estoque,
+    //         $slug,
+    //         $imagem,
+    //         $categoria_id,
+    //         $informacoes_relevantes,
+    //         $data_lancamento,
+    //         $pontos,
+    //         $promocao,
+    //         $destaque,
+    //         $status,
+    //         $id
+    //     ]);
+    // }
 
     public function delete($id)
     {
