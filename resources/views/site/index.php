@@ -3,108 +3,158 @@ Teste
 <?php endSection(); ?>
 
 <?php startSection('content'); ?>
-<div class="p-4 p-md-5 mb-4 text-white bg-dark">
-    <div class="row">
-        <div class="col-md-12 px-0 text-center">
-            <h1 class="display-4 fst-italic">Bem-vindo à Nossa Loja!</h1>
-            <p class="lead my-3">Explore nossos produtos de cosméticos e perfumaria com promoções exclusivas.</p>
-        </div>
-    </div>    
-</div>
+<div class="container my-5">
+    <!-- Título e Descrição -->
+    <div class="text-center mb-5">
+        <h1 class="display-4">Informações das Eleições</h1>
+        <p class="lead">Explore as informações completas sobre as escolas participantes, seus candidatos, e o total de eleitores por segmento.</p>
+    </div>
 
-<!-- Kits em Promoções -->
-<div class="container">
-    <section class="mb-5">
-        <h2 class="text-center my-5 display-6 fst-italic">Kits em Promoção</h2>
-        <div class="row justify-content-center">
-            <!-- Exemplo de Kit -->
-            <?php foreach ($kitsPromocionais as $kit): ?>
-                <div class="col-md-4">  
-                    <?php
-                        include __DIR__.'/includes/kit.php';
-                ?>
+    <!-- Informações Gerais sobre Escolas, Candidatos e Eleitores -->
+    <div class="mb-5">
+        <h2 class="h4">Resumo Geral</h2>
+        <p class="text-center">Esta seção contém um resumo geral das escolas, candidatos e eleitores. Utilize as seções abaixo para explorar detalhes específicos.</p>
+        
+        <div class="row">
+            <!-- Card para Total de Escolas -->
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Total de Escolas</h5>
+                        <p class="card-text display-6"><?php echo count($escolas); ?></p>
+                    </div>
                 </div>
-            <?php endforeach; ?>
-        </div>
-
-        <div class="text-center">
-            <hr>
-            <a class="btn btn-outline-dark btn-lg mt-3" href="/kits"><i class="fa fa-plus fa-fw"></i> Ver todos os Kits...</a>
-        </div>
-    </section>
- </div>
-
-<!-- Faixa de Contato WhatsApp -->
-<div class="highlight-banner">
-    <p class="display-6 fst-italic" style="font-size: 28px;">Entre em contato conosco agora mesmo!</p>
-    <a href="https://api.whatsapp.com/send?phone=SEUNUMERO" target="_blank" class="btn btn-dark btn-lg"><i class="fab fa-whatsapp fa-fw"></i> Fale via WhatsApp</a>
-</div>
-
-<!-- Produtos em Promoções -->
-<div class="container">
-    <section class="mb-5">
-        <h2 class="text-center my-5 display-6 fst-italic">Produtos em Promoção</h2>
-        <div class="row justify-content-center">
-            <!-- Exemplo de Produto -->
-            <?php foreach ($produtosPromocionais as $produto): ?>
-                <div class="col-md-4">  
-                    <?php
-                    include __DIR__.'/includes/produto.php';
-                ?>
+            </div>
+            
+            <!-- Card para Total de Chapas -->
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Total de Chapas</h5>
+                        <p class="card-text display-6">
+                            <?php 
+                            $total_chapas = array_reduce($escolas, function($carry, $candidatos) {
+                                $chapas = array_column($candidatos, 'chapa');
+                                return $carry + count(array_unique($chapas));
+                            }, 0);
+                            echo $total_chapas;
+                            ?>
+                        </p>
+                    </div>
                 </div>
-            <?php endforeach; ?>
-        </div>
-
-        <div class="text-center">
-            <hr>
-            <a class="btn btn-outline-dark btn-lg mt-3" href="/promocoes"><i class="fa fa-plus fa-fw"></i> Ver todos os produtos em promoção...</a>
-        </div>
-    </section>
-</div>
-
-<!-- Produtos em Destaque -->
-<div class="container">
-    <section class="mb-5">
-        <h2 class="text-center my-5 display-6 fst-italic">Produtos em Destaque</h2>
-        <div class="row justify-content-center">
-            <!-- Exemplo de Produto Destaque -->
-            <?php foreach ($produtosDestaques as $produto): ?>
-                <div class="col-md-4">  
-                    <?php
-                    include __DIR__.'/includes/produto.php';
-                ?>
+            </div>
+            
+            <!-- Card para Total de Candidatos -->
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Total de Candidatos</h5>
+                        <p class="card-text display-6">
+                            <?php 
+                            $total_candidatos = array_reduce($escolas, function($carry, $candidatos) {
+                                return $carry + count($candidatos);
+                            }, 0);
+                            echo $total_candidatos;
+                            ?>
+                        </p>
+                    </div>
                 </div>
-            <?php endforeach; ?>
-        </div>
-
-        <div class="text-center">
-            <hr>
-            <a class="btn btn-outline-dark btn-lg mt-3" href="/destaques"><i class="fa fa-plus fa-fw"></i> Ver todos os produtos em destaque...</a>
-        </div>
-    </section>
-</div>
-
-<!-- Faixa para Seguir no Instagram -->
-<div class="highlight-banner">
-    <p class="display-6 fst-italic" style="font-size: 28px;">Siga-nos no Instagram para mais novidades!</p>
-    <a href="https://www.instagram.com/seuusuario" target="_blank" class="btn btn-dark btn-lg"><i class="fab fa-instagram fa-fw"></i> Instagram</a>
-</div>
-
-<!-- Últimos Produtos Lançados -->
-<div class="container">
-    <section class="mb-5">
-        <h2 class="text-center my-5 display-6 fst-italic">Últimos Produtos Lançados</h2>
-        <div class="row justify-content-center">
-            <!-- Exemplo de Produto Lançado -->
-            <?php foreach ($produtosUltimosLancados as $produto): ?>
-                <div class="col-md-4">  
-                    <?php
-                    include __DIR__.'/includes/produto.php';
-                ?>
+            </div>
+            
+            <!-- Card para Total de Eleitores -->
+            <div class="col-md-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h5 class="card-title">Total de Eleitores</h5>
+                        <p class="card-text display-6">
+                            <?php 
+                            $total_eleitores = array_reduce($eleitores, function($carry, $segmentos) {
+                                return $carry + array_sum($segmentos);
+                            }, 0);
+                            echo $total_eleitores;
+                            ?>
+                        </p>
+                    </div>
                 </div>
-            <?php endforeach; ?>
+            </div>
         </div>
-    </section>
+    </div>
+
+    <?php foreach ($escolas as $escola_nome => $candidatos): ?>
+        <div class="row mb-5">
+            <!-- Escola e Candidatos -->
+            <div class="col-md-6">
+                <h3 class="h5">Escola: <?php echo $escola_nome; ?></h3>
+                <table class="table table-bordered table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Chapa</th>
+                            <th>Cargo</th>
+                            <th>Candidato</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php 
+                        // Agrupa candidatos por chapa
+                        $chapas = [];
+                        foreach ($candidatos as $candidato) {
+                            $chapas[$candidato['chapa']][] = $candidato;
+                        }
+
+                        // Itera sobre as chapas
+                        foreach ($chapas as $chapa => $candidatosDaChapa): 
+                            // Ordena por cargo, assumindo "Diretor" deve vir antes de "Diretor Adjunto"
+                            usort($candidatosDaChapa, function($a, $b) {
+                                return strcmp($a['cargo'], $b['cargo']);
+                            });
+                            ?>
+                            <tr>
+                                <td rowspan="<?php echo count($candidatosDaChapa); ?>"><?php echo $chapa; ?></td>
+                                <?php foreach ($candidatosDaChapa as $index => $candidato): ?>
+                                    <?php if ($index > 0): ?>
+                                        <tr>
+                                    <?php endif; ?>
+                                    <td><?php echo $candidato['cargo']; ?></td>
+                                    <td><?php echo $candidato['candidato_nome']; ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Eleitores por Segmento -->
+            <div class="col-md-6">
+                <h4 class="h5">Total de Eleitores por Segmento</h4>
+                <table class="table table-bordered table-hover">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Segmento</th>
+                            <th>Total de Eleitores</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if (isset($eleitores[$escola_nome])): ?>
+                            <?php foreach ($eleitores[$escola_nome] as $segmento => $total): ?>
+                                <tr>
+                                    <td><?php echo ucfirst($segmento); ?></td>
+                                    <td><?php echo $total; ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="2">Sem eleitores registrados</td>
+                            </tr>
+                        <?php endif; ?>
+                        <tr>
+                            <td><strong>Total Geral</strong></td>
+                            <td><strong><?php echo $totaisPorEscola[$escola_nome] ?? 0; ?></strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    <?php endforeach; ?>
 </div>
 <?php endSection(); ?>
 

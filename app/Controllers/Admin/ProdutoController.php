@@ -34,7 +34,7 @@ class ProdutoController extends Controller
 
             $produtos = $this->produtoModel
                 ->where('nome', 'LIKE', $search)
-                ->orWhere('slug', 'LIKE', $search)
+                ->orWhere('codigo_barras', $search)
                 ->orderBy('nome')
                 ->paginate($perPage, $currentPage);
 

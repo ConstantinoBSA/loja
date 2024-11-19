@@ -1,89 +1,16 @@
-:root{
-    --cor-primary: #F5E111;
-    --cor-secondary: #212529;
+table { 
+    width: 80%; 
+    margin: 20px auto; 
+    border-collapse: collapse; 
 }
-
-.navbar-custom {
-    background-color: var(--cor-primary);
+th, td { 
+    border: 1px solid #ddd; 
+    padding: 8px;
+    text-align: left; 
 }
-
-.footer-custom {
-    background-color: var(--cor-secondary);
-    color: white;
+th { 
+    background-color: #f2f2f2; 
 }
-
-.footer-custom a {
-    color: white;
-    text-decoration: none;
-}
-
-.highlight-banner {
-    background-color: var(--cor-primary);
-    color: var(--cor-secondary);
-    padding: 45px 20px;
-    text-align: center;
-    margin: 20px 0;
-}
-
-.highlight-banner a {
-    font-weight: bold;
-}
-
-.descricao {
-    height: 90px;
-    /* Define a altura fixa */
-    overflow: hidden;
-    /* Esconde o texto que ultrapassa a altura */
-}
-
-.card-body .mt-auto {
-    margin-top: auto;
-    /* Posiciona o preço e o botão no final do card */
-}
-.nav li{
-    font-weight: 600;
-    transition: all .3s;
-}
-.nav li:hover,
-.nav li.active {
-    background-color: var(--cor-secondary);
-}
-.nav li:hover a,
-.nav li.active a {
-    color: var(--cor-primary);
-}
-img.logo-principal{
-    position: absolute;
-    top: -15px;
-    left: 10px;
-    width: 110px;
-    height: 110px;
-}
-img.logo-textos{
-    position: relative;
-    top: 0;
-    left: 135px;
-    width: auto;
-    height: 40px;
-}
-.menu-footer{
-    width: 80%;
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-.menu-footer li a{
-    color: #fff;
-    padding: 6px 0;
-    margin: 0;
-    transition: .3s;
-    border-bottom: 1px solid rgba(0, 0, 0, .3);
-}
-.menu-footer li:hover a{
-    color: var(--cor-primary);
-    margin-left: 10px;
-}
-.requerido:after{
-    content:'*';
-    color: red;
+h2 { 
+    text-align: center; 
 }

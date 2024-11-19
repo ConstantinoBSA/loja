@@ -120,3 +120,16 @@ function csrf()
         echo '<input type="hidden" name="csrf_token" value="'. htmlspecialchars($_SESSION['csrf_token'] ?? '').'">';
     }
 }
+
+function gerarCodigoSeguranca() {
+    return bin2hex(random_bytes(16));  // Gera um código de 32 caracteres hexadecimais
+}
+
+function gerarCedulasParaEscola($escolaId, $quantidade) {
+    $pdo = Database::getInstance()->getConnection();
+    $stmt = $pdo->prepare("INSERT INTO cedulas (codigo_seguranca, escola_id) VALUES (:codigo, :escola_id)");
+    for ($i = 0; $i < $quantidade; $i++) {
+        $codigoSeguranca = gerarCodigoSeguranca();
+        $stmt->execute(['codigo' => $codigoSeguranca, 'escola_id' => $escolaId]);
+    }
+}

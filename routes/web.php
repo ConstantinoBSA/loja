@@ -39,20 +39,7 @@ $router->addRoute('GET', 'admin/teste', [TesteController::class, 'index']);
 
 // Site
 $router->addRoute('GET', 'home', [IndexController::class, 'index']);
-$router->addRoute('GET', 'cosmeticos', [CosmeticoController::class, 'index']);
-$router->addRoute('GET', 'cosmeticos/{slug}', [CosmeticoController::class, 'detalhes']);
-$router->addRoute('GET', 'perfumaria', [PerfumariaController::class, 'index']);
-$router->addRoute('GET', 'perfumaria/{slug}', [PerfumariaController::class, 'detalhes']);
-$router->addRoute('GET', 'kits', [KitController::class, 'index']);
-$router->addRoute('GET', 'kits/{slug}', [KitController::class, 'detalhes']);
-$router->addRoute('GET', 'promocoes', [PromocaoController::class, 'index']);
-$router->addRoute('GET', 'promocoes/{slug}', [PromocaoController::class, 'detalhes']);
-$router->addRoute('GET', 'destaques', [DestaqueController::class, 'index']);
-$router->addRoute('GET', 'destaques/{slug}', [DestaqueController::class, 'detalhes']);
-$router->addRoute('GET', 'contato', [IndexController::class, 'contato']);
-$router->addRoute('GET', 'enviar_contato', [IndexController::class, 'enviar_contato']);
-$router->addRoute('GET', 'processar_pedido', [IndexController::class, 'processar_pedido']);
-$router->addRoute('GET', 'subscribers', [IndexController::class, 'subscribers']);
+$router->addRoute('GET', 'cedulas', [IndexController::class, 'cedulas']);
 
 // Admin
 // Auth
